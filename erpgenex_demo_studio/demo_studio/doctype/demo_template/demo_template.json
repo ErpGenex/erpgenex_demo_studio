@@ -1,0 +1,223 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:template_name",
+ "creation": "2024-07-22 14:12:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "template_name",
+  "version",
+  "status",
+  "industry",
+  "description",
+  "template_preview_section",
+  "template_summary",
+  "template_manifest",
+  "column_break_1",
+  "provider",
+  "provider_version",
+  "is_standard",
+  "is_active",
+  "section_break_2",
+  "company_config",
+  "branch_config",
+  "employee_config",
+  "column_break_3",
+  "customer_config",
+  "supplier_config",
+  "transaction_config",
+  "section_break_4",
+  "data_generators",
+  "business_rules",
+  "validation_rules"
+ ],
+ "fields": [
+  {
+   "fieldname": "template_name",
+   "fieldtype": "Data",
+   "label": "Template Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "1.0.0",
+   "fieldname": "version",
+   "fieldtype": "Data",
+   "label": "Version",
+   "reqd": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nInactive\nDeprecated",
+   "reqd": 1
+  },
+  {
+   "fieldname": "industry",
+   "fieldtype": "Link",
+   "label": "Industry",
+   "options": "Industry"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "template_preview_section",
+   "fieldtype": "Section Break",
+   "label": "Template preview"
+  },
+  {
+   "fieldname": "template_summary",
+   "fieldtype": "HTML",
+   "label": "Template Summary"
+  },
+  {
+   "fieldname": "template_manifest",
+   "fieldtype": "Code",
+   "label": "Template Manifest",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "provider",
+   "fieldtype": "Link",
+   "label": "Provider",
+   "options": "Demo Provider"
+  },
+  {
+   "fieldname": "provider_version",
+   "fieldtype": "Data",
+   "label": "Provider Version",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_standard",
+   "fieldtype": "Check",
+   "label": "Is Standard"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Is Active"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Configuration"
+  },
+  {
+   "fieldname": "company_config",
+   "fieldtype": "Code",
+   "label": "Company Config",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "branch_config",
+   "fieldtype": "Code",
+   "label": "Branch Config",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "employee_config",
+   "fieldtype": "Code",
+   "label": "Employee Config",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer_config",
+   "fieldtype": "Code",
+   "label": "Customer Config",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "supplier_config",
+   "fieldtype": "Code",
+   "label": "Supplier Config",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "transaction_config",
+   "fieldtype": "Code",
+   "label": "Transaction Config",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break",
+   "label": "Rules"
+  },
+  {
+   "fieldname": "data_generators",
+   "fieldtype": "Table",
+   "label": "Data Generators",
+   "options": "Template Data Generator"
+  },
+  {
+   "fieldname": "business_rules",
+   "fieldtype": "Code",
+   "label": "Business Rules",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "validation_rules",
+   "fieldtype": "Code",
+   "label": "Validation Rules",
+   "options": "JSON"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-22 14:12:00.000000",
+ "modified_by": "Administrator",
+ "module": "Demo Studio",
+ "name": "Demo Template",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Demo Studio Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "template_name"
+}

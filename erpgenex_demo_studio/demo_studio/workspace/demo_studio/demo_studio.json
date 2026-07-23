@@ -1,0 +1,104 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"demo-studio-h\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Demo Studio</b></span>\",\"col\":12}},{\"id\":\"demo-studio-sec1\",\"type\":\"card\",\"data\":{\"card_name\":\"Core Setup\",\"col\":4}},{\"id\":\"demo-studio-sec2\",\"type\":\"card\",\"data\":{\"card_name\":\"Operations\",\"col\":4}},{\"id\":\"demo-studio-sec3\",\"type\":\"card\",\"data\":{\"card_name\":\"Automation\",\"col\":4}}]",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "layers",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Demo Studio",
+ "links": [
+  {
+   "type": "Card Break",
+   "label": "Core Setup",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "label": "Demo Environments",
+   "link_type": "DocType",
+   "link_to": "Demo Environment",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "label": "Demo Templates",
+   "link_type": "DocType",
+   "link_to": "Demo Template",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Card Break",
+   "label": "Operations",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "label": "Demo Providers",
+   "link_type": "DocType",
+   "link_to": "Demo Provider",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "label": "Generation Jobs",
+   "link_type": "DocType",
+   "link_to": "Demo Generation Job",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  }
+ ],
+ "modified": "2026-07-22 00:00:00",
+ "modified_by": "Administrator",
+ "module": "Demo Studio",
+ "name": "Demo Studio",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [],
+ "sequence_id": 0,
+ "shortcuts": [
+  {
+   "format": "{}",
+   "hidden": 0,
+   "link_count": 0,
+   "link_to": "Demo Environment",
+   "shortcut_name": "Create Demo Environment",
+   "label": "Create Demo Environment",
+   "type": "DocType"
+  },
+  {
+   "format": "{}",
+   "hidden": 0,
+   "link_count": 0,
+   "link_to": "Demo Template",
+   "shortcut_name": "Create Template",
+   "label": "Create Template",
+   "type": "DocType"
+  }
+ ],
+ "title": "Demo Studio"
+}

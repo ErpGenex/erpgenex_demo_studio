@@ -1,0 +1,247 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "field:job_name",
+ "creation": "2024-07-22 14:12:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "job_name",
+  "job_id",
+  "status",
+  "job_type",
+  "demo_environment",
+  "template",
+  "column_break_1",
+  "started_by",
+  "started_at",
+  "completed_at",
+  "duration_seconds",
+  "section_break_2",
+  "progress",
+  "current_step",
+  "total_steps",
+  "column_break_3",
+  "records_created",
+  "records_failed",
+  "records_remaining",
+  "section_break_4",
+  "error_message",
+  "error_traceback",
+  "column_break_5",
+  "cancel_requested",
+  "is_cancellable",
+  "section_break_6",
+  "generation_steps",
+  "job_log"
+ ],
+ "fields": [
+  {
+   "fieldname": "job_name",
+   "fieldtype": "Data",
+   "label": "Job Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "job_id",
+   "fieldtype": "Data",
+   "label": "Job ID",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nRunning\nCompleted\nFailed\nCancelled",
+   "reqd": 1
+  },
+  {
+   "fieldname": "job_type",
+   "fieldtype": "Select",
+   "label": "Job Type",
+   "options": "Generation\nReset\nCleanup\nValidation\nExport\nImport",
+   "reqd": 1
+  },
+  {
+   "fieldname": "demo_environment",
+   "fieldtype": "Link",
+   "label": "Demo Environment",
+   "options": "Demo Environment"
+  },
+  {
+   "fieldname": "template",
+   "fieldtype": "Link",
+   "label": "Template",
+   "options": "Demo Template"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "started_by",
+   "fieldtype": "Link",
+   "label": "Started By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "started_at",
+   "fieldtype": "Datetime",
+   "label": "Started At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "completed_at",
+   "fieldtype": "Datetime",
+   "label": "Completed At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "duration_seconds",
+   "fieldtype": "Int",
+   "label": "Duration (seconds)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Progress"
+  },
+  {
+   "default": "0",
+   "fieldname": "progress",
+   "fieldtype": "Percent",
+   "label": "Progress",
+   "read_only": 1
+  },
+  {
+   "fieldname": "current_step",
+   "fieldtype": "Int",
+   "label": "Current Step",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_steps",
+   "fieldtype": "Int",
+   "label": "Total Steps",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "records_created",
+   "fieldtype": "Int",
+   "label": "Records Created",
+   "read_only": 1
+  },
+  {
+   "fieldname": "records_failed",
+   "fieldtype": "Int",
+   "label": "Records Failed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "records_remaining",
+   "fieldtype": "Int",
+   "label": "Records Remaining",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break",
+   "label": "Error Handling"
+  },
+  {
+   "fieldname": "error_message",
+   "fieldtype": "Text",
+   "label": "Error Message",
+   "read_only": 1
+  },
+  {
+   "fieldname": "error_traceback",
+   "fieldtype": "Code",
+   "label": "Error Traceback",
+   "options": "Text",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "cancel_requested",
+   "fieldtype": "Check",
+   "label": "Cancel Requested"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_cancellable",
+   "fieldtype": "Check",
+   "label": "Is Cancellable"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "generation_steps",
+   "fieldtype": "Table",
+   "label": "Generation Steps",
+   "options": "Generation Step"
+  },
+  {
+   "fieldname": "job_log",
+   "fieldtype": "Code",
+   "label": "Job Log",
+   "options": "JSON",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-22 14:12:00.000000",
+ "modified_by": "Administrator",
+ "module": "Demo Studio",
+ "name": "Demo Generation Job",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Demo Studio Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "job_name"
+}

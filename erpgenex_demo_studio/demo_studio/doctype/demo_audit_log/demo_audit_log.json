@@ -1,0 +1,73 @@
+{
+ "actions": [],
+ "creation": "2024-07-22 14:12:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "action",
+  "action_type",
+  "performed_by",
+  "performed_at",
+  "column_break_1",
+  "details",
+  "ip_address"
+ ],
+ "fields": [
+  {
+   "fieldname": "action",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Action",
+   "reqd": 1
+  },
+  {
+   "fieldname": "action_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Action Type",
+   "options": "Create\nUpdate\nDelete\nGenerate\nReset\nValidate\nExport\nImport",
+   "reqd": 1
+  },
+  {
+   "fieldname": "performed_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Performed By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "performed_at",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Performed At",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "details",
+   "fieldtype": "Text",
+   "label": "Details"
+  },
+  {
+   "fieldname": "ip_address",
+   "fieldtype": "Data",
+   "label": "IP Address"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-07-22 14:12:00.000000",
+ "modified_by": "Administrator",
+ "module": "Demo Studio",
+ "name": "Demo Audit Log",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

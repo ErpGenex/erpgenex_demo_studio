@@ -1,0 +1,18 @@
+[
+ {
+  "creation": "2024-07-22 14:12:00.000000",
+  "desk_access": 1,
+  "disabled": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_standard": 1,
+  "modified": "2024-07-22 14:12:00.000000",
+  "modified_by": "Administrator",
+  "module": "Demo Studio",
+  "name": "Demo Studio Manager",
+  "owner": "Administrator",
+  "role_name": "Demo Studio Manager",
+  "restrict_to_domain": null,
+  "two_factor_auth": 0
+ }
+]

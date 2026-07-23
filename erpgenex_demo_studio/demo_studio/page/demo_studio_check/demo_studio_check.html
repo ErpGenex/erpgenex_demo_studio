@@ -1,0 +1,60 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+<div class="container">
+	<h1>Demo Studio Installation Check</h1>
+	
+	<div class="alert alert-{{ 'success' if check_results.overall_status == 'Success' else 'warning' }}">
+		<strong>Overall Status:</strong> {{ check_results.overall_status }}
+	</div>
+	
+	<h2>Workspace</h2>
+	<div class="card">
+		<div class="card-body">
+			<p><strong>Exists:</strong> {{ "✓" if check_results.workspace.exists else "✗" }} {{ check_results.workspace.name }}</p>
+			{% if check_results.workspace.details %}
+			<p><strong>Module:</strong> {{ check_results.workspace.details.module }}</p>
+			<p><strong>Public:</strong> {{ check_results.workspace.details.public }}</p>
+			<p><strong>Standard:</strong> {{ check_results.workspace.details.is_standard }}</p>
+			{% endif %}
+			{% if check_results.workspace.error %}
+			<p class="text-danger"><strong>Error:</strong> {{ check_results.workspace.error }}</p>
+			{% endif %}
+		</div>
+	</div>
+	
+	<h2>Module</h2>
+	<div class="card">
+		<div class="card-body">
+			<p><strong>Exists:</strong> {{ "✓" if check_results.module.exists else "✗" }} {{ check_results.module.name }}</p>
+			{% if check_results.module.details %}
+			<p><strong>Module Name:</strong> {{ check_results.module.details.module_name }}</p>
+			<p><strong>App Name:</strong> {{ check_results.module.details.app_name }}</p>
+			{% endif %}
+			{% if check_results.module.error %}
+			<p class="text-danger"><strong>Error:</strong> {{ check_results.module.error }}</p>
+			{% endif %}
+		</div>
+	</div>
+	
+	<h2>DocTypes</h2>
+	<div class="card">
+		<div class="card-body">
+			{% for doctype, info in check_results.doctypes.items() %}
+			<p><strong>{{ doctype }}:</strong> {{ "✓" if info.exists else "✗" }}</p>
+			{% endfor %}
+		</div>
+	</div>
+	
+	<h2>Role</h2>
+	<div class="card">
+		<div class="card-body">
+			<p><strong>Exists:</strong> {{ "✓" if check_results.role.exists else "✗" }} {{ check_results.role.name }}</p>
+		</div>
+	</div>
+	
+	<div class="mt-4">
+		<a href="/app/demo-studio" class="btn btn-primary">Go to Demo Studio Workspace</a>
+	</div>
+</div>
+{% endblock %}

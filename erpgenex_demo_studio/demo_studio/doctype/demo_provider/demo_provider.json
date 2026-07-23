@@ -1,0 +1,180 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:provider_name",
+ "creation": "2024-07-22 14:12:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "provider_name",
+  "version",
+  "status",
+  "provider_type",
+  "app_name",
+  "description",
+  "column_break_1",
+  "module_name",
+  "class_name",
+  "method_name",
+  "is_active",
+  "section_break_2",
+  "supported_industries",
+  "supported_doctypes",
+  "capabilities",
+  "column_break_3",
+  "requirements",
+  "dependencies",
+  "configuration"
+ ],
+ "fields": [
+  {
+   "fieldname": "provider_name",
+   "fieldtype": "Data",
+   "label": "Provider Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "1.0.0",
+   "fieldname": "version",
+   "fieldtype": "Data",
+   "label": "Version",
+   "reqd": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nInactive\nDeprecated",
+   "reqd": 1
+  },
+  {
+   "fieldname": "provider_type",
+   "fieldtype": "Select",
+   "label": "Provider Type",
+   "options": "Industry Provider\nData Provider\nScenario Provider\nDashboard Provider\nWorkflow Provider\nReport Provider\nKPI Provider",
+   "reqd": 1
+  },
+  {
+   "fieldname": "app_name",
+   "fieldtype": "Data",
+   "label": "App Name"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "module_name",
+   "fieldtype": "Data",
+   "label": "Module Name"
+  },
+  {
+   "fieldname": "class_name",
+   "fieldtype": "Data",
+   "label": "Class Name"
+  },
+  {
+   "fieldname": "method_name",
+   "fieldtype": "Data",
+   "label": "Method Name"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Is Active"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Capabilities"
+  },
+  {
+   "fieldname": "supported_industries",
+   "fieldtype": "Table",
+   "label": "Supported Industries",
+   "options": "Provider Industry"
+  },
+  {
+   "fieldname": "supported_doctypes",
+   "fieldtype": "Table",
+   "label": "Supported DocTypes",
+   "options": "Provider DocType"
+  },
+  {
+   "fieldname": "capabilities",
+   "fieldtype": "Code",
+   "label": "Capabilities",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "requirements",
+   "fieldtype": "Code",
+   "label": "Requirements",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "dependencies",
+   "fieldtype": "Code",
+   "label": "Dependencies",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "configuration",
+   "fieldtype": "Code",
+   "label": "Configuration",
+   "options": "JSON"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-22 14:12:00.000000",
+ "modified_by": "Administrator",
+ "module": "Demo Studio",
+ "name": "Demo Provider",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Demo Studio Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "provider_name"
+}

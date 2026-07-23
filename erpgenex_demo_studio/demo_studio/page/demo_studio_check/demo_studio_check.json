@@ -1,0 +1,16 @@
+{
+ "app": "erpgenex_demo_studio",
+ "creation": "2024-07-22 18:30:00.000000",
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2024-07-22 18:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Demo Studio",
+ "name": "demo_studio_check",
+ "owner": "Administrator",
+ "page_name": "Demo Studio Check",
+ "standard": "Yes",
+ "style": "",
+ "system_page": 0,
+ "title": "Demo Studio Installation Check"
+}

@@ -1,14 +1,14 @@
 app_name = "erpgenex_demo_studio"
-app_title = "Erpgenex Demo Studio"
-app_publisher = "sayed"
-app_description = "Erpgenex Demo Studio"
-app_email = "microcol@gmail.com"
+app_title = "ERPGenex Demo Studio"
+app_publisher = "ErpGenEx"
+app_description = "Enterprise Demo Lifecycle Management Platform for ERPGenex"
+app_email = "dev@erpgenex.com"
 app_license = "mit"
 
 # Apps
 # ------------------
 
-# required_apps = []
+required_apps = ["omnexa_core"]
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
@@ -82,14 +82,14 @@ app_license = "mit"
 # Installation
 # ------------
 
-# before_install = "erpgenex_demo_studio.install.before_install"
-# after_install = "erpgenex_demo_studio.install.after_install"
+before_install = "erpgenex_demo_studio.install.before_install"
+after_install = "erpgenex_demo_studio.install.after_install"
 
 # Uninstallation
 # ------------
 
-# before_uninstall = "erpgenex_demo_studio.uninstall.before_uninstall"
-# after_uninstall = "erpgenex_demo_studio.uninstall.after_uninstall"
+before_uninstall = "erpgenex_demo_studio.uninstall.before_uninstall"
+after_uninstall = "erpgenex_demo_studio.uninstall.after_uninstall"
 
 # Integration Setup
 # ------------------
@@ -247,3 +247,24 @@ app_license = "mit"
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
 
+# Fixtures
+# ------------
+fixtures = [
+	{"dt": "Role", "filters": [["name", "in", ["Demo Studio Manager"]]]},
+]
+
+# Whitelisted Methods
+# ------------------
+whitelisted_methods = [
+	"erpgenex_demo_studio.api.demo_api.health_check",
+	"erpgenex_demo_studio.api.demo_api.get_demo_statistics",
+	"erpgenex_demo_studio.api.demo_api.get_demo_environments",
+	"erpgenex_demo_studio.api.demo_api.get_demo_templates",
+	"erpgenex_demo_studio.api.demo_api.validate_demo_environment",
+	"erpgenex_demo_studio.api.demo_api.export_demo_environment",
+	"erpgenex_demo_studio.api.demo_api.import_demo_environment",
+	"erpgenex_demo_studio.api.demo_api.get_industries",
+	"erpgenex_demo_studio.providers.provider_registry.refresh_provider_registry",
+	"erpgenex_demo_studio.providers.provider_registry.get_available_providers",
+	"erpgenex_demo_studio.utils.safety.check_demo_safety",
+]
