@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"demo-studio-h\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Demo Studio</b></span>\",\"col\":12}},{\"id\":\"demo-studio-sec1\",\"type\":\"card\",\"data\":{\"card_name\":\"Core Setup\",\"col\":4}},{\"id\":\"demo-studio-sec2\",\"type\":\"card\",\"data\":{\"card_name\":\"Operations\",\"col\":4}},{\"id\":\"demo-studio-sec3\",\"type\":\"card\",\"data\":{\"card_name\":\"Automation\",\"col\":4}}]",
+ "content": "[{\"id\":\"demo-studio-h\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Demo Studio</b></span>\",\"col\":12}},{\"id\":\"demo-studio-sec1\",\"type\":\"card\",\"data\":{\"card_name\":\"Core Setup\",\"col\":4}},{\"id\":\"demo-studio-sec2\",\"type\":\"card\",\"data\":{\"card_name\":\"Operations\",\"col\":4}},{\"id\":\"demo-studio-sec3\",\"type\":\"card\",\"data\":{\"card_name\":\"Automation\",\"col\":4}},{\"id\":\"demo-studio-qh\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>Quick Actions</b></span>\",\"col\":12}},{\"id\":\"demo-studio-q1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Demo Deployment Wizard\",\"col\":4}},{\"id\":\"demo-studio-q2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Demo Environment\",\"col\":4}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
