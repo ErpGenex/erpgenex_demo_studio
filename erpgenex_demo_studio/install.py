@@ -82,6 +82,12 @@ def _strip_workspace_meta(data: dict) -> dict:
 	return {key: value for key, value in data.items() if key in workspace_fields}
 
 
+def _replace_child_rows(doc, fieldname: str, rows: list[dict] | None):
+	doc.set(fieldname, [])
+	for row in rows or []:
+		doc.append(fieldname, row)
+
+
 def create_demo_studio_workspace():
 	"""Create or update the Demo Studio workspace from the standard JSON file."""
 	workspace_data = _load_workspace_data()
@@ -94,10 +100,18 @@ def create_demo_studio_workspace():
 
 	if frappe.db.exists("Workspace", workspace_name):
 		workspace = frappe.get_doc("Workspace", workspace_name)
-		workspace.update(workspace_data)
+		workspace.update({k: v for k, v in workspace_data.items() if k not in {"links", "shortcuts", "charts", "cards", "quick_lists", "number_cards", "custom_blocks"}})
+		_replace_child_rows(workspace, "links", workspace_data.get("links"))
+		_replace_child_rows(workspace, "shortcuts", workspace_data.get("shortcuts"))
+		_replace_child_rows(workspace, "charts", workspace_data.get("charts"))
+		_replace_child_rows(workspace, "cards", workspace_data.get("cards"))
+		_replace_child_rows(workspace, "quick_lists", workspace_data.get("quick_lists"))
+		_replace_child_rows(workspace, "number_cards", workspace_data.get("number_cards"))
+		_replace_child_rows(workspace, "custom_blocks", workspace_data.get("custom_blocks"))
 		workspace.save(ignore_permissions=True)
 	else:
 		workspace = frappe.get_doc({"doctype": "Workspace", **workspace_data})
 		workspace.insert(ignore_permissions=True)
 
 	frappe.db.commit()
+	frappe.clear_cache(doctype="Workspace")
