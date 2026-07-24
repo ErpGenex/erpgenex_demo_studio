@@ -68,6 +68,7 @@ def generate_demo(demo_name, template, industry, company_name, language=None):
 	demo.template = template
 	demo.industry = industry
 	demo.company_name = company_name
+	demo.is_demo = 1
 	if language:
 		demo.language = language
 	demo.status = "Generating"

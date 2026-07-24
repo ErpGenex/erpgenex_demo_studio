@@ -15,6 +15,7 @@ class DemoGenerator:
 	def generate_demo_environment(self):
 		"""Generate complete demo environment"""
 		try:
+			self.demo_environment.is_demo = 1
 			self.create_generation_job()
 			self.demo_environment.generation_id = self.generation_id
 			self.demo_environment.generator_version = "1.0.0"
@@ -39,7 +40,8 @@ class DemoGenerator:
 			self.demo_environment.save()
 			
 		except Exception as e:
-			self.job.mark_failed(str(e), frappe.get_traceback())
+			if self.job:
+				self.job.mark_failed(str(e), frappe.get_traceback())
 			self.demo_environment.status = "Error"
 			self.demo_environment.save()
 			raise
