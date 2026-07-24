@@ -94,6 +94,15 @@
    "format": "{}",
    "hidden": 0,
    "link_count": 0,
+   "link_to": "demo_wizard",
+   "shortcut_name": "Demo Deployment Wizard",
+   "label": "🚀 Demo Deployment Wizard",
+   "type": "Page"
+  },
+  {
+   "format": "{}",
+   "hidden": 0,
+   "link_count": 0,
    "link_to": "Demo Template",
    "shortcut_name": "Create Template",
    "label": "Create Template",

@@ -251,6 +251,7 @@ after_uninstall = "erpgenex_demo_studio.uninstall.after_uninstall"
 # ------------
 fixtures = [
 	{"dt": "Role", "filters": [["name", "in", ["Demo Studio Manager"]]]},
+	{"dt": "Page", "filters": [["name", "=", "demo_wizard"]]},
 ]
 
 # Whitelisted Methods
