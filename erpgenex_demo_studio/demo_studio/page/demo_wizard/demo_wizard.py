@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from html import escape
 
 import frappe
@@ -186,6 +187,22 @@ def get_context(context):
 	context.no_cache = 1
 	context.show_sidebar = False
 	return context
+
+
+@frappe.whitelist()
+def get_rendered_page_html():
+	"""Return the rendered wizard HTML for Desk mounting."""
+	template_path = os.path.join(
+		frappe.get_app_path("erpgenex_demo_studio"),
+		"erpgenex_demo_studio",
+		"demo_studio",
+		"page",
+		"demo_wizard",
+		"demo_wizard.html",
+	)
+	with open(template_path, encoding="utf-8") as handle:
+		template = handle.read()
+	return frappe.render_template(template, {"wizard_payload": _build_wizard_payload()})
 
 
 @frappe.whitelist()
