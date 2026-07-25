@@ -73,7 +73,7 @@ def _load_workspace_data() -> dict | None:
 def _strip_workspace_meta(data: dict) -> dict:
 	# Only keep fields that are actual workspace data, not DocType definition
 	workspace_fields = {
-		"name", "label", "title", "module", "icon", "is_standard", "public",
+		"name", "label", "title", "module", "icon", "is_standard", "public", "content",
 		"links", "shortcuts", "charts", "cards", "quick_lists", "number_cards",
 		"custom_blocks", "onboarding", "extends", "restrict_to_domain",
 		"hide_links", "app", "disable_user_customization", "include_in_global_search",

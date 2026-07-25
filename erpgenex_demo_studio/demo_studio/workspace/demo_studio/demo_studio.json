@@ -1,6 +1,7 @@
 {
  "charts": [],
- "content": "[{\"id\":\"demo-studio-h\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Demo Studio</b></span>\",\"col\":12}},{\"id\":\"demo-studio-sec1\",\"type\":\"card\",\"data\":{\"card_name\":\"Core Setup\",\"col\":4}},{\"id\":\"demo-studio-sec2\",\"type\":\"card\",\"data\":{\"card_name\":\"Operations\",\"col\":4}},{\"id\":\"demo-studio-sec3\",\"type\":\"card\",\"data\":{\"card_name\":\"Automation\",\"col\":4}},{\"id\":\"demo-studio-qh\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>Quick Actions</b></span>\",\"col\":12}},{\"id\":\"demo-studio-q1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Demo Deployment Wizard\",\"col\":4}},{\"id\":\"demo-studio-q2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Demo Environment\",\"col\":4}}]",
+ "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX \\u2014 Demo Studio\", \"col\": 12}}, {\"id\": \"demo-studio-qh\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h5\\\"><b>\\ud83d\\ude80 Quick Launch</b></span>\", \"col\": 12}}, {\"id\": \"demo-studio-q1\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"\\ud83d\\ude80 Demo Deployment Wizard\", \"col\": 4}}, {\"id\": \"demo-studio-q2\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Create Demo Environment\", \"col\": 4}}, {\"id\": \"demo-studio-h\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Demo Studio</b></span>\", \"col\": 12}}, {\"id\": \"demo-studio-sec1\", \"type\": \"card\", \"data\": {\"card_name\": \"Core Setup\", \"col\": 4}}, {\"id\": \"demo-studio-sec2\", \"type\": \"card\", \"data\": {\"card_name\": \"Operations\", \"col\": 4}}, {\"id\": \"demo-studio-sec3\", \"type\": \"card\", \"data\": {\"card_name\": \"Automation\", \"col\": 4}}]",
+ "creation": "2026-07-23 01:39:47.067327",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -12,100 +13,98 @@
  "label": "Demo Studio",
  "links": [
   {
-   "type": "Card Break",
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Core Setup",
-   "hidden": 0,
-   "is_query_report": 0,
    "link_count": 0,
-   "onboard": 0
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
   },
   {
-   "type": "Link",
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Demo Environments",
-   "link_type": "DocType",
+   "link_count": 0,
    "link_to": "Demo Environment",
-   "hidden": 0,
-   "is_query_report": 0,
-   "link_count": 0,
-   "onboard": 0
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   },
   {
-   "type": "Link",
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Demo Templates",
-   "link_type": "DocType",
+   "link_count": 0,
    "link_to": "Demo Template",
-   "hidden": 0,
-   "is_query_report": 0,
-   "link_count": 0,
-   "onboard": 0
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   },
   {
-   "type": "Card Break",
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Operations",
-   "hidden": 0,
-   "is_query_report": 0,
    "link_count": 0,
-   "onboard": 0
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
   },
   {
-   "type": "Link",
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Demo Providers",
-   "link_type": "DocType",
-   "link_to": "Demo Provider",
-   "hidden": 0,
-   "is_query_report": 0,
    "link_count": 0,
-   "onboard": 0
+   "link_to": "Demo Provider",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   },
   {
-   "type": "Link",
-   "label": "Generation Jobs",
-   "link_type": "DocType",
-   "link_to": "Demo Generation Job",
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Generation Jobs",
    "link_count": 0,
-   "onboard": 0
+   "link_to": "Demo Generation Job",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-07-22 00:00:00",
+ "modified": "2026-07-25 14:31:06.073165",
  "modified_by": "Administrator",
  "module": "Demo Studio",
  "name": "Demo Studio",
  "number_cards": [],
  "owner": "Administrator",
- "parent_page": "",
+ "parent_page": "Platform",
  "public": 1,
  "quick_lists": [],
  "restrict_to_domain": "",
  "roles": [],
- "sequence_id": 0,
+ "sequence_id": 71.0,
  "shortcuts": [
   {
+   "color": "Green",
+   "doc_view": "",
    "format": "{}",
-   "hidden": 0,
-   "link_count": 0,
-   "link_to": "Demo Environment",
-   "shortcut_name": "Create Demo Environment",
-   "label": "Create Demo Environment",
-   "type": "DocType"
-  },
-  {
-   "format": "{}",
-   "hidden": 0,
-   "link_count": 0,
+   "icon": "play",
+   "label": "\ud83d\ude80 Demo Deployment Wizard",
    "link_to": "demo_wizard",
-   "shortcut_name": "Demo Deployment Wizard",
-   "label": "🚀 Demo Deployment Wizard",
    "type": "Page"
   },
   {
+   "doc_view": "",
    "format": "{}",
-   "hidden": 0,
-   "link_count": 0,
-   "link_to": "Demo Template",
-   "shortcut_name": "Create Template",
+   "label": "Create Demo Environment",
+   "link_to": "Demo Environment",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "format": "{}",
    "label": "Create Template",
+   "link_to": "Demo Template",
    "type": "DocType"
   }
  ],

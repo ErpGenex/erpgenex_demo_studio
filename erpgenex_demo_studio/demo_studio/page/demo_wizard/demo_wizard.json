@@ -8,7 +8,7 @@
  "module": "Demo Studio",
  "name": "demo_wizard",
  "owner": "Administrator",
- "page_name": "Demo Wizard",
+ "page_name": "demo_wizard",
  "standard": "Yes",
  "style": "",
  "system_page": 0,

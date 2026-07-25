@@ -97,7 +97,7 @@ def _build_template_card(template_doc):
 		"description": template_doc.description,
 		"is_standard": bool(template_doc.is_standard),
 		"is_active": bool(template_doc.is_active),
-		"summary_html": template_doc.template_summary or "",
+		"summary_html": getattr(template_doc, "template_summary", None) or "",
 		"metrics": profile["metrics"],
 		"total_estimated_records": profile["total_estimated_records"],
 		"scale": profile["scale"],
@@ -117,10 +117,22 @@ def _build_template_card(template_doc):
 
 
 def _load_template_cards():
+	list_fields = [
+		"name",
+		"template_name",
+		"industry",
+		"version",
+		"provider",
+		"description",
+		"is_standard",
+		"is_active",
+		"template_manifest",
+	]
+
 	templates = frappe.get_all(
 		"Demo Template",
 		filters={"status": "Active", "is_active": 1},
-		fields=["name", "template_name", "industry", "version", "provider", "description", "is_standard", "is_active", "template_summary", "template_manifest"],
+		fields=list_fields,
 		order_by="is_standard desc, modified desc, template_name asc",
 	)
 
@@ -129,7 +141,7 @@ def _load_template_cards():
 		templates = frappe.get_all(
 			"Demo Template",
 			filters={"status": "Active", "is_active": 1},
-			fields=["name", "template_name", "industry", "version", "provider", "description", "is_standard", "is_active", "template_summary", "template_manifest"],
+			fields=list_fields,
 			order_by="is_standard desc, modified desc, template_name asc",
 		)
 
@@ -181,9 +193,7 @@ def _build_wizard_payload():
 
 def get_context(context):
 	"""Server-side context for the demo wizard page."""
-	wizard_payload = _build_wizard_payload()
-	context.title = wizard_payload["title"]
-	context.wizard_payload = wizard_payload
+	context.title = "Demo Deployment Wizard"
 	context.no_cache = 1
 	context.show_sidebar = False
 	return context
@@ -192,17 +202,21 @@ def get_context(context):
 @frappe.whitelist()
 def get_rendered_page_html():
 	"""Return the rendered wizard HTML for Desk mounting."""
-	template_path = os.path.join(
-		frappe.get_app_path("erpgenex_demo_studio"),
+	template_path = frappe.get_app_path(
 		"erpgenex_demo_studio",
 		"demo_studio",
-		"page",
-		"demo_wizard",
-		"demo_wizard.html",
+		"templates",
+		"demo_wizard_desk.html",
 	)
 	with open(template_path, encoding="utf-8") as handle:
 		template = handle.read()
 	return frappe.render_template(template, {"wizard_payload": _build_wizard_payload()})
+
+
+@frappe.whitelist()
+def get_wizard_payload():
+	"""Return the wizard payload as JSON for client-side initialization."""
+	return _build_wizard_payload()
 
 
 @frappe.whitelist()

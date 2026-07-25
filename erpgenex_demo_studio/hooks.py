@@ -40,6 +40,7 @@ required_apps = ["omnexa_core"]
 # webform_include_css = {"doctype": "public/css/doctype.css"}
 
 # include js in page
+# page_js = {"demo_wizard": "public/js/demo_wizard.js"}
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views

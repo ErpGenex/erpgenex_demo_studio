@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create",
+ "creation": "2026-07-23 01:39:48.937122",
+ "description": "Create or review your first **Demo Template** record from this workspace.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-07-25 13:41:08.642970",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-WS-demo_studio-02-demo_template",
+ "owner": "Administrator",
+ "reference_document": "Demo Template",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Get started with Demo Template",
+ "validate_action": 1
+}
