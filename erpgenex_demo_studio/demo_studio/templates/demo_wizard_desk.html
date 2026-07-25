@@ -627,7 +627,7 @@
 						<div class="metrics-grid">
 							<div class="metric"><strong>{{ template.metrics.branches }}</strong><span>فروع</span></div>
 							<div class="metric"><strong>{{ template.metrics.employees }}</strong><span>موظفون</span></div>
-							<div class="metric"><strong>{{ template.metrics.customers }}</strong><span>{{ template.customer_label or "Customers" }}</span></div>
+							<div class="metric"><strong>{{ template.metrics.customers }}</strong><span class="customer-party-label" data-template-name="{{ template.name }}">{{ template.customer_label or "عملاء" }}</span></div>
 						</div>
 					</div>
 					{% endfor %}

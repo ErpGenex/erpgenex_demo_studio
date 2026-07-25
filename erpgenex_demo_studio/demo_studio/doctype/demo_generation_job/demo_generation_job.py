@@ -68,10 +68,12 @@ class DemoGenerationJob(Document):
 	
 	def mark_failed(self, error_message, error_traceback=None):
 		"""Mark job as failed"""
+		self.reload()
 		self.status = "Failed"
 		self.error_message = error_message
 		if error_traceback:
 			self.error_traceback = error_traceback
+		self.flags.ignore_version = True
 		self.save()
 	
 	def mark_cancelled(self):

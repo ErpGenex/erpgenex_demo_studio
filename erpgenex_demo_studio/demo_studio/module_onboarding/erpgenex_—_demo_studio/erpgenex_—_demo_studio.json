@@ -13,17 +13,20 @@
  "documentation_url": "https://frappe.io/framework",
  "idx": 0,
  "is_complete": 0,
- "modified": "2026-07-25 13:41:08.660316",
+ "modified": "2026-07-25 15:05:02.393852",
  "modified_by": "Administrator",
  "module": "Demo Studio",
  "name": "ERPGENEX \u2014 Demo Studio",
  "owner": "Administrator",
  "steps": [
   {
-   "step": "ERPGENEX-WS-demo_studio-01-demo_environment"
+   "step": "ERPGENEX-WS-demo_studio-01-page-demo_wizard"
   },
   {
-   "step": "ERPGENEX-WS-demo_studio-02-demo_template"
+   "step": "ERPGENEX-WS-demo_studio-02-demo_environment"
+  },
+  {
+   "step": "ERPGENEX-WS-demo_studio-03-demo_template"
   },
   {
    "step": "ERPGENEX-WS-demo_studio-home"

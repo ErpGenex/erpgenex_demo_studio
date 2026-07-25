@@ -28,7 +28,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Step Type",
-   "options": "Company\nBranch\nEmployee\nCustomer\nSupplier\nItem\nTransaction\nAccounting\nInventory\nHR\nCRM\nManufacturing\nMaintenance\nQuality\nDocument\nValidation\nCleanup"
+   "options": "Company\nBranch\nDepartment\nEmployee\nCustomer\nPatient\nStudent\nSupplier\nItem\nTransaction\nAccounting\nInventory\nHR\nCRM\nManufacturing\nMaintenance\nQuality\nDocument\nValidation\nCleanup"
   },
   {
    "default": "Pending",

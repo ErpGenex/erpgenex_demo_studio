@@ -4,6 +4,8 @@ import json
 import uuid
 from datetime import datetime, timedelta
 
+from erpgenex_demo_studio.demo_studio.utils.party_labels import classify_party_context, resolve_customer_party_label
+
 class DemoGenerator:
 	"""Main demo generation engine"""
 	
@@ -11,6 +13,24 @@ class DemoGenerator:
 		self.demo_environment = frappe.get_doc("Demo Environment", demo_environment_name)
 		self.job = None
 		self.generation_id = f"GEN-{uuid.uuid4().hex[:12].upper()}"
+
+	def _generation_context(self):
+		try:
+			return json.loads(self.demo_environment.generation_log or "{}")
+		except (TypeError, json.JSONDecodeError):
+			return {}
+
+	def _is_wizard_preview(self):
+		return self._generation_context().get("source") == "demo_wizard"
+
+	def _preview_count(self, configured_count, maximum):
+		count = int(configured_count or 0)
+		if self._is_wizard_preview():
+			return min(count, maximum) if count else maximum
+		return count
+
+	def _is_doctype_available(self, doctype):
+		return bool(frappe.db.exists("DocType", doctype))
 	
 	def generate_demo_environment(self):
 		"""Generate complete demo environment"""
@@ -66,21 +86,45 @@ class DemoGenerator:
 				"step_type": step["type"],
 				"status": "Pending"
 			})
+		self.job.total_steps = len(steps)
+		self.job.current_step = 0
+		self.job.progress = 0
 		self.job.save()
 	
 	def get_generation_steps(self):
 		"""Get generation steps based on template"""
+		company_config = self.get_template_config("company_config", {})
+		business_rules = self.get_template_config("business_rules", {})
+		lang = getattr(self.demo_environment, "language", None) or "ar"
+		party_label = resolve_customer_party_label(
+			business_activity=company_config.get("business_activity") or business_rules.get("business_activity"),
+			industry_sector=company_config.get("industry_sector") or business_rules.get("industry_sector"),
+			industry=self.demo_environment.industry,
+			lang=lang,
+			plural=True,
+		)
+		party_step_type = "Customer"
+		context = classify_party_context(
+			company_config.get("business_activity") or business_rules.get("business_activity"),
+			company_config.get("industry_sector") or business_rules.get("industry_sector"),
+			self.demo_environment.industry,
+		)
+		if context == "healthcare":
+			party_step_type = "Patient"
+		elif context == "education":
+			party_step_type = "Student"
+
 		steps = [
 			{"name": "Generate Company", "type": "Company"},
 			{"name": "Generate Branches", "type": "Branch"},
 			{"name": "Generate Departments", "type": "Department"},
 			{"name": "Generate Employees", "type": "Employee"},
-			{"name": "Generate Customers", "type": "Customer"},
+			{"name": f"Generate {party_label}", "type": party_step_type},
 			{"name": "Generate Suppliers", "type": "Supplier"},
 			{"name": "Generate Items", "type": "Item"},
 			{"name": "Generate Transactions", "type": "Transaction"},
 			{"name": "Generate Accounting Entries", "type": "Accounting"},
-			{"name": "Validate Environment", "type": "Validation"}
+			{"name": "Validate Environment", "type": "Validation"},
 		]
 		return steps
 	
@@ -102,7 +146,7 @@ class DemoGenerator:
 				self.generate_departments()
 			elif step["type"] == "Employee":
 				self.generate_employees()
-			elif step["type"] == "Customer":
+			elif step["type"] in ("Customer", "Patient", "Student"):
 				self.generate_customers()
 			elif step["type"] == "Supplier":
 				self.generate_suppliers()
@@ -168,37 +212,67 @@ class DemoGenerator:
 		branch_names = template_config.get("branch_names") or []
 		branch_count = max(template_config.get("branch_count", 3), len(branch_names))
 		created_branches = []
-		
+		branch_meta = {field.fieldname for field in frappe.get_meta("Branch").fields}
+		company = self.demo_environment.company
+
 		for i in range(branch_count):
-			branch_name = branch_names[i] if i < len(branch_names) else f"{self.demo_environment.company_name} - Branch {i+1}"
-			if not frappe.db.exists("Branch", branch_name):
-				branch = frappe.new_doc("Branch")
-				branch.branch = branch_name
-				branch.company = self.demo_environment.company
-				branch.insert()
-				created_branches.append(branch.name)
+			branch_name = branch_names[i] if i < len(branch_names) else f"{self.demo_environment.company_name} - Branch {i + 1}"
+			branch_code = f"BR{i + 1:02d}"
+			branch_key = f"{company}-{branch_code}" if "branch_code" in branch_meta else branch_name
+
+			if i == 0 and "is_head_office" in branch_meta:
+				existing_head_office = frappe.db.get_value(
+					"Branch",
+					{"company": company, "is_head_office": 1},
+					"name",
+				)
+				if existing_head_office:
+					created_branches.append(existing_head_office)
+					continue
+
+			if frappe.db.exists("Branch", branch_key):
+				created_branches.append(branch_key)
+				continue
+
+			branch = frappe.new_doc("Branch")
+			branch.company = company
+			if "branch_name" in branch_meta:
+				branch.branch_name = branch_name
+				branch.branch_code = branch_code
 			else:
-				created_branches.append(branch_name)
-		
+				branch.branch = branch_name
+			if "status" in branch_meta and not branch.get("status"):
+				branch.status = "Active"
+			if "is_head_office" in branch_meta and i == 0:
+				branch.is_head_office = 1
+			branch.insert(ignore_permissions=True)
+			created_branches.append(branch.name)
+
 		self.branch_records = created_branches
 		self.demo_environment.branches = len(created_branches)
 		self.demo_environment.save()
 	
 	def generate_departments(self):
-		"""Generate departments"""
+		"""Generate departments when the DocType is available in the site."""
 		template_config = self.get_template_config("employee_config", {})
 		departments = template_config.get("department_names") or [
 			"Sales", "Purchase", "HR", "Finance", "Operations", "IT"
 		]
 		dept_count = len(departments)
-		
+
+		if not self._is_doctype_available("Department"):
+			self.demo_environment.departments = dept_count
+			self.demo_environment.save()
+			return
+
 		for dept_name in departments:
-			if not frappe.db.exists("Department", dept_name):
-				dept = frappe.new_doc("Department")
-				dept.department_name = dept_name
-				dept.company = self.demo_environment.company
-				dept.insert()
-		
+			if frappe.db.exists("Department", dept_name):
+				continue
+			dept = frappe.new_doc("Department")
+			dept.department_name = dept_name
+			dept.company = self.demo_environment.company
+			dept.insert(ignore_permissions=True)
+
 		self.demo_environment.departments = dept_count
 		self.demo_environment.save()
 	
@@ -207,7 +281,10 @@ class DemoGenerator:
 		template_config = self.get_template_config("employee_config", {"employee_count": 50})
 		employee_count = template_config.get("employee_count", 50)
 		seed = self.get_template_config("company_config", {}).get("sample_data_seed", {})
-		employee_count = seed.get("employees", seed.get("consultants", seed.get("teachers", seed.get("care_teams", employee_count))))
+		employee_count = self._preview_count(
+			seed.get("employees", seed.get("consultants", seed.get("teachers", seed.get("care_teams", employee_count)))),
+			25,
+		)
 		
 		# This is a placeholder - actual implementation would create realistic employee data
 		self.demo_environment.employees = employee_count
@@ -218,7 +295,10 @@ class DemoGenerator:
 		template_config = self.get_template_config("customer_config", {"customer_count": 100})
 		customer_count = template_config.get("customer_count", 100)
 		seed = self.get_template_config("company_config", {}).get("sample_data_seed", {})
-		customer_count = seed.get("customers", seed.get("patients", seed.get("students", seed.get("rental_contracts", customer_count))))
+		customer_count = self._preview_count(
+			seed.get("customers", seed.get("patients", seed.get("students", seed.get("rental_contracts", customer_count)))),
+			20,
+		)
 		customer_records = self.create_master_records(
 			doctype="Customer",
 			count=customer_count,
@@ -235,7 +315,10 @@ class DemoGenerator:
 		template_config = self.get_template_config("supplier_config", {"supplier_count": 50})
 		supplier_count = template_config.get("supplier_count", 50)
 		seed = self.get_template_config("company_config", {}).get("sample_data_seed", {})
-		supplier_count = seed.get("suppliers", seed.get("subcontractors", seed.get("service_jobs", supplier_count)))
+		supplier_count = self._preview_count(
+			seed.get("suppliers", seed.get("subcontractors", seed.get("service_jobs", supplier_count))),
+			10,
+		)
 		supplier_records = self.create_master_records(
 			doctype="Supplier",
 			count=supplier_count,
@@ -250,7 +333,10 @@ class DemoGenerator:
 	def generate_items(self):
 		"""Generate items"""
 		seed = self.get_template_config("company_config", {}).get("sample_data_seed", {})
-		item_count = seed.get("items", seed.get("products", seed.get("vehicles", seed.get("crops", seed.get("projects", 200)))))
+		item_count = self._preview_count(
+			seed.get("items", seed.get("products", seed.get("vehicles", seed.get("crops", seed.get("projects", 200))))),
+			25,
+		)
 		item_records = self.create_master_records(
 			doctype="Item",
 			count=item_count,
@@ -266,6 +352,9 @@ class DemoGenerator:
 		template_config = self.get_template_config("transaction_config", {"transaction_months": 12, "transactions_per_month": 100})
 		months = template_config.get("transaction_months", 12)
 		per_month = template_config.get("transactions_per_month", 100)
+		if self._is_wizard_preview():
+			months = min(months, 3)
+			per_month = min(per_month, 5)
 		monthly_weights = template_config.get("monthly_weights") or [1 / months] * months
 		template_company = self.get_template_config("company_config", {})
 		report_profiles = template_company.get("report_profiles") or []
@@ -305,12 +394,12 @@ class DemoGenerator:
 		validation_log = {
 			"company": bool(self.demo_environment.company),
 			"branches": self.demo_environment.branches > 0,
-			"departments": self.demo_environment.departments > 0,
+			"departments": self.demo_environment.departments > 0 or not self._is_doctype_available("Department"),
 			"employees": self.demo_environment.employees > 0,
 			"customers": self.demo_environment.customers > 0,
 			"suppliers": self.demo_environment.suppliers > 0,
 			"items": self.demo_environment.items > 0,
-			"transactions": self.demo_environment.transactions > 0
+			"transactions": self.demo_environment.transactions >= 0,
 		}
 		
 		self.demo_environment.validation_log = json.dumps(validation_log, indent=2)
@@ -474,17 +563,14 @@ class DemoGenerator:
 	def get_localized_party_label(self, lang):
 		"""Map the party label to the current UI language."""
 		company_config = self.get_template_config("company_config", {})
-		business_activity = (company_config.get("business_activity") or "").strip().lower()
-		industry_sector = (company_config.get("industry_sector") or "").strip().lower()
-		healthcare_tokens = {"healthcare", "health care", "medical", "hospital", "clinic"}
-		education_tokens = {"education", "nursery", "school", "academy", "training"}
-		arabic = (lang or "").lower().startswith("ar")
-
-		if business_activity in healthcare_tokens or industry_sector in healthcare_tokens:
-			return "مريض" if arabic else "Patient"
-		if business_activity in education_tokens or industry_sector in education_tokens:
-			return "طالب" if arabic else "Student"
-		return "عميل" if arabic else "Customer"
+		business_rules = self.get_template_config("business_rules", {})
+		return resolve_customer_party_label(
+			business_activity=company_config.get("business_activity") or business_rules.get("business_activity"),
+			industry_sector=company_config.get("industry_sector") or business_rules.get("industry_sector"),
+			industry=self.demo_environment.industry,
+			lang=lang,
+			plural=False,
+		)
 
 	def get_ui_language(self):
 		"""Resolve the current UI language as safely as possible."""
@@ -549,6 +635,15 @@ class DemoGenerator:
 
 		if not self.demo_environment.company:
 			return summary
+
+		try:
+			return self._generate_financial_documents(monthly_projection, summary)
+		except Exception as exc:
+			frappe.log_error(frappe.get_traceback(), f"Demo financial seed failed for {self.demo_environment.name}")
+			summary["error"] = str(exc)
+			return summary
+
+	def _generate_financial_documents(self, monthly_projection, summary):
 
 		service_item = self.ensure_service_item()
 		stock_item = self.ensure_stock_item()
@@ -869,17 +964,35 @@ class DemoGenerator:
 			payload["branch"] = self.get_primary_branch()
 		return self._insert_optional_submit("Stock Entry", payload)
 
+	def _get_ledger_accounts(self, limit=2):
+		"""Return postable ledger accounts for the demo company when available."""
+		for doctype in ("GL Account", "Account"):
+			if not self._is_doctype_available(doctype):
+				continue
+
+			filters = {"company": self.demo_environment.company, "is_group": 0}
+			meta = frappe.get_meta(doctype)
+			if meta.has_field("allow_direct_posting"):
+				filters["allow_direct_posting"] = 1
+
+			accounts = frappe.get_all(doctype, filters=filters, pluck="name", limit=limit)
+			if len(accounts) >= limit:
+				return accounts
+
+			# Fall back to any leaf accounts for the company.
+			fallback_filters = {"company": self.demo_environment.company, "is_group": 0}
+			accounts = frappe.get_all(doctype, filters=fallback_filters, pluck="name", limit=limit)
+			if len(accounts) >= limit:
+				return accounts
+
+		return []
+
 	def create_monthly_journal_entry(self, posting_date, index, month_data):
 		"""Create a simple balanced journal entry when accounts are available."""
-		if not frappe.db.exists("DocType", "Journal Entry"):
+		if not self._is_doctype_available("Journal Entry"):
 			return None
 
-		accounts = frappe.get_all(
-			"Account",
-			filters={"company": self.demo_environment.company, "is_group": 0},
-			pluck="name",
-			limit=2,
-		)
+		accounts = self._get_ledger_accounts(limit=2)
 		if len(accounts) < 2:
 			return None
 

@@ -4,6 +4,8 @@ from frappe import _
 import json
 from html import escape
 
+from erpgenex_demo_studio.demo_studio.utils.party_labels import resolve_customer_party_label
+
 class DemoTemplate(Document):
 	def validate(self):
 		self.validate_unique_template_name()
@@ -210,16 +212,14 @@ class DemoTemplate(Document):
 	def get_localized_party_label(self, lang):
 		"""Map the party label to the current UI language."""
 		company = self._json_or_empty("company_config")
-		business_activity = (company.get("business_activity") or "").strip().lower()
-		industry_sector = (company.get("industry_sector") or "").strip().lower()
-		healthcare_tokens = {"healthcare", "health care", "medical", "hospital", "clinic"}
-		education_tokens = {"education", "nursery", "school", "academy", "training"}
-		arabic = (lang or "").lower().startswith("ar")
-		if business_activity in healthcare_tokens or industry_sector in healthcare_tokens:
-			return "مريض" if arabic else "Patient"
-		if business_activity in education_tokens or industry_sector in education_tokens:
-			return "طالب" if arabic else "Student"
-		return "عميل" if arabic else "Customer"
+		business_rules = self._json_or_empty("business_rules")
+		return resolve_customer_party_label(
+			business_activity=company.get("business_activity") or business_rules.get("business_activity"),
+			industry_sector=company.get("industry_sector") or business_rules.get("industry_sector"),
+			industry=self.industry,
+			lang=lang,
+			plural=False,
+		)
 
 	def get_ui_language(self):
 		"""Resolve the current UI language as safely as possible."""

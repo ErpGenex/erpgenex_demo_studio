@@ -55,6 +55,21 @@ let wizard, templates, selectedTemplate, currentIndustry, pollTimer;
 		return value === 'ar' ? 'العربية' : 'English';
 	}
 
+	function resolveCustomerLabel(template, lang = 'ar') {
+		if (!template) return lang === 'ar' ? 'عملاء' : 'Customers';
+		if (template.party_context === 'healthcare') return lang === 'ar' ? 'مرضى' : 'Patients';
+		if (template.party_context === 'education') return lang === 'ar' ? 'طلاب' : 'Students';
+		return lang === 'ar' ? 'عملاء' : 'Customers';
+	}
+
+	function refreshCustomerLabels(lang) {
+		const language = lang || (document.getElementById('language') && document.getElementById('language').value) || 'ar';
+		document.querySelectorAll('.customer-party-label[data-template-name]').forEach(el => {
+			const template = templates.find(t => t.name === el.dataset.templateName);
+			el.textContent = resolveCustomerLabel(template, language);
+		});
+	}
+
 	function getSelectedTemplate() {
 		return templates.find(t => t.name === selectedTemplate?.name) || selectedTemplate;
 	}
@@ -244,6 +259,20 @@ let wizard, templates, selectedTemplate, currentIndustry, pollTimer;
 			if (!result || !result.success) {
 				throw new Error(result?.error || 'تعذر بدء إنشاء الديمو');
 			}
+			if (result.status === 'Ready') {
+				const state = await apiCall('erpgenex_demo_studio.demo_studio.page.demo_wizard.demo_wizard.get_demo_progress', { demo_name: result.demo_name });
+				renderProgress(state);
+				updateStepIndicator('review');
+				setStatus(result.message || 'تم إنشاء الديمو بنجاح ويمكنك فتحه الآن.', 'success');
+				if (launchBtn) {
+					launchBtn.disabled = false;
+					launchBtn.textContent = 'بدء نشر الديمو';
+				}
+				if (state?.redirect_url) {
+					window.location.href = state.redirect_url;
+				}
+				return;
+			}
 			renderProgress({ progress: 0, status: 'Generating', message: 'تم استلام الطلب، جارٍ بدء النشر...', recent_events: [] });
 			updateStepIndicator('review');
 			await pollProgress(result.demo_name);
@@ -278,8 +307,11 @@ let wizard, templates, selectedTemplate, currentIndustry, pollTimer;
 	}
 
 	function initWizard() {
+		const languageEl = document.getElementById('language');
+		const initialLang = languageEl ? languageEl.value : 'ar';
+
 		// Fetch wizard payload via API
-		apiCall('erpgenex_demo_studio.demo_studio.page.demo_wizard.demo_wizard.get_wizard_payload')
+		apiCall('erpgenex_demo_studio.demo_studio.page.demo_wizard.demo_wizard.get_wizard_payload', { lang: initialLang })
 			.then(payload => {
 				wizard = payload || {};
 			})
@@ -295,6 +327,7 @@ let wizard, templates, selectedTemplate, currentIndustry, pollTimer;
 
 				refreshTemplateSelection();
 				renderSummary();
+				refreshCustomerLabels(initialLang);
 
 				const templateSearchEl = document.getElementById('templateSearch');
 				const demoNameEl = document.getElementById('demoName');
@@ -306,7 +339,10 @@ let wizard, templates, selectedTemplate, currentIndustry, pollTimer;
 				if (templateSearchEl) templateSearchEl.addEventListener('input', filterTemplates);
 				if (demoNameEl) demoNameEl.addEventListener('input', renderSummary);
 				if (companyNameEl) companyNameEl.addEventListener('input', renderSummary);
-				if (languageEl) languageEl.addEventListener('change', renderSummary);
+				if (languageEl) languageEl.addEventListener('change', () => {
+					refreshCustomerLabels(languageEl.value);
+					renderSummary();
+				});
 
 				if (launchBtn) launchBtn.addEventListener('click', launchDemo);
 				if (resetBtn) resetBtn.addEventListener('click', resetWizard);

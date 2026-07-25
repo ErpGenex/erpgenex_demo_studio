@@ -8,6 +8,7 @@ import frappe
 from frappe import _
 
 from erpgenex_demo_studio.demo_studio.setup.demo_templates import ensure_annual_demo_templates
+from erpgenex_demo_studio.demo_studio.utils.party_labels import classify_party_context, resolve_customer_party_label
 
 
 def _parse_json(value, default=None):
@@ -37,15 +38,41 @@ def _first_non_empty(*values, default=""):
 	return default
 
 
-def _estimate_template_profile(template_doc):
+def _template_company_config(template_doc, manifest: dict) -> dict:
+	company = manifest.get("company_config") if isinstance(manifest.get("company_config"), dict) else {}
+	if not company and template_doc.get("company_config"):
+		company = _parse_json(template_doc.company_config, {})
+	return company
+
+
+def _template_business_rules(template_doc, manifest: dict) -> dict:
+	rules = manifest.get("business_rules") if isinstance(manifest.get("business_rules"), dict) else {}
+	if not rules and template_doc.get("business_rules"):
+		rules = _parse_json(template_doc.business_rules, {})
+	return rules
+
+
+def _resolve_template_customer_label(template_doc, manifest: dict, lang: str = "ar") -> str:
+	company = _template_company_config(template_doc, manifest)
+	rules = _template_business_rules(template_doc, manifest)
+	return resolve_customer_party_label(
+		business_activity=_first_non_empty(company.get("business_activity"), rules.get("business_activity")),
+		industry_sector=_first_non_empty(company.get("industry_sector"), rules.get("industry_sector")),
+		industry=_first_non_empty(template_doc.industry, manifest.get("industry")),
+		lang=lang,
+		plural=True,
+	)
+
+
+def _estimate_template_profile(template_doc, lang: str = "ar"):
 	manifest = _parse_json(template_doc.template_manifest, {})
-	company = manifest.get("company_config", {})
-	branch = manifest.get("branch_config", {})
-	employee = manifest.get("employee_config", {})
-	customer = manifest.get("customer_config", {})
-	supplier = manifest.get("supplier_config", {})
-	transaction = manifest.get("transaction_config", {})
-	business_rules = manifest.get("business_rules", {})
+	company = _template_company_config(template_doc, manifest)
+	branch = manifest.get("branch_config", {}) if isinstance(manifest.get("branch_config"), dict) else _parse_json(template_doc.branch_config, {})
+	employee = manifest.get("employee_config", {}) if isinstance(manifest.get("employee_config"), dict) else _parse_json(template_doc.employee_config, {})
+	customer = manifest.get("customer_config", {}) if isinstance(manifest.get("customer_config"), dict) else _parse_json(template_doc.customer_config, {})
+	supplier = manifest.get("supplier_config", {}) if isinstance(manifest.get("supplier_config"), dict) else _parse_json(template_doc.supplier_config, {})
+	transaction = manifest.get("transaction_config", {}) if isinstance(manifest.get("transaction_config"), dict) else _parse_json(template_doc.transaction_config, {})
+	business_rules = _template_business_rules(template_doc, manifest)
 
 	sample = company.get("sample_data_seed") or {}
 	branch_names = branch.get("branch_names") or []
@@ -71,12 +98,19 @@ def _estimate_template_profile(template_doc):
 	total = sum(metrics.values())
 	scale = "خفيف" if total < 500 else "متوسط" if total < 1500 else "كامل"
 	priority = "مقترح" if template_doc.is_standard else "جاهز"
+	customer_label = _resolve_template_customer_label(template_doc, manifest, lang)
+	party_context = classify_party_context(
+		business_activity=_first_non_empty(company.get("business_activity"), business_rules.get("business_activity")),
+		industry_sector=_first_non_empty(company.get("industry_sector"), business_rules.get("industry_sector")),
+		industry=_first_non_empty(template_doc.industry, manifest.get("industry")),
+	)
 	return {
 		"metrics": metrics,
 		"total_estimated_records": total,
 		"scale": scale,
 		"priority": priority,
-		"customer_label": manifest.get("customer_party_label") or "Customer",
+		"customer_label": customer_label,
+		"party_context": party_context,
 		"kpi_focus": kpi_focus,
 		"report_profiles": report_profiles,
 		"branch_names": branch_names,
@@ -85,8 +119,8 @@ def _estimate_template_profile(template_doc):
 	}
 
 
-def _build_template_card(template_doc):
-	profile = _estimate_template_profile(template_doc)
+def _build_template_card(template_doc, lang: str = "ar"):
+	profile = _estimate_template_profile(template_doc, lang)
 	manifest = profile["manifest"]
 	return {
 		"name": template_doc.name,
@@ -103,6 +137,7 @@ def _build_template_card(template_doc):
 		"scale": profile["scale"],
 		"priority": profile["priority"],
 		"customer_label": profile["customer_label"],
+		"party_context": profile["party_context"],
 		"kpi_focus": profile["kpi_focus"],
 		"report_profiles": profile["report_profiles"],
 		"branch_names": profile["branch_names"],
@@ -116,7 +151,7 @@ def _build_template_card(template_doc):
 	}
 
 
-def _load_template_cards():
+def _load_template_cards(lang: str = "ar"):
 	list_fields = [
 		"name",
 		"template_name",
@@ -145,12 +180,12 @@ def _load_template_cards():
 			order_by="is_standard desc, modified desc, template_name asc",
 		)
 
-	cards = [_build_template_card(frappe.get_doc("Demo Template", row.name)) for row in templates]
+	cards = [_build_template_card(frappe.get_doc("Demo Template", row.name), lang) for row in templates]
 	return cards
 
 
-def _build_wizard_payload():
-	templates = _load_template_cards()
+def _build_wizard_payload(lang: str = "ar"):
+	templates = _load_template_cards(lang)
 	industries = []
 	for template in templates:
 		if template["industry"] and template["industry"] not in industries:
@@ -181,7 +216,7 @@ def _build_wizard_payload():
 		"defaults": {
 			"demo_name": _("Live Demo"),
 			"company_name": _("Live Demo Company"),
-			"language": "ar",
+			"language": lang,
 		},
 		"steps": [
 			{"key": "template", "title": _("1. اختر القالب"), "description": _("اختر ديمو جاهز حسب النشاط والحجم")},
@@ -214,16 +249,16 @@ def get_rendered_page_html():
 
 
 @frappe.whitelist()
-def get_wizard_payload():
+def get_wizard_payload(lang: str = "ar"):
 	"""Return the wizard payload as JSON for client-side initialization."""
-	return _build_wizard_payload()
+	return _build_wizard_payload(lang or "ar")
 
 
 @frappe.whitelist()
-def get_template_details(template_name):
+def get_template_details(template_name, lang: str = "ar"):
 	"""Return an enriched template snapshot for the selected template."""
 	template = frappe.get_doc("Demo Template", template_name)
-	return _build_template_card(template)
+	return _build_template_card(template, lang or "ar")
 
 
 @frappe.whitelist()
@@ -268,21 +303,26 @@ def start_demo_generation(demo_data):
 		)
 		demo.save(ignore_permissions=True)
 
+		# Run inline so the wizard shows progress without requiring a background worker.
+		run_now = True
+
 		frappe.enqueue(
 			"erpgenex_demo_studio.demo_studio.generators.demo_generator.generate_demo_environment",
 			demo_name=demo.name,
 			queue="long",
-			now=False,
+			now=run_now,
 		)
 
+		demo.reload()
+		is_ready = demo.status == "Ready"
 		return {
 			"success": True,
 			"demo_name": demo.name,
 			"demo_id": demo.demo_id,
 			"template": template.template_name,
 			"status": demo.status,
-			"redirect_url": f"/app/demo-environment/{demo.name}",
-			"message": _("تم بدء إنشاء الديمو بنجاح"),
+			"redirect_url": f"/app/demo-environment/{demo.name}" if is_ready else None,
+			"message": _("تم إنشاء الديمو بنجاح") if is_ready else _("تم بدء إنشاء الديمو بنجاح"),
 		}
 	except Exception as e:
 		frappe.log_error(frappe.get_traceback(), _("Demo Wizard Error"))
@@ -333,6 +373,22 @@ def get_demo_progress(demo_name):
 				recent_events = json.loads(job.job_log)[-5:]
 			except Exception:
 				recent_events = []
+
+		if job and not recent_events and getattr(job, "generation_steps", None):
+			status_map = {
+				"Pending": _("قيد الانتظار"),
+				"Running": _("جاري التنفيذ"),
+				"Completed": _("مكتمل"),
+				"Failed": _("فشل"),
+				"Skipped": _("تم التخطي"),
+			}
+			recent_events = [
+				{
+					"step": step.step_name,
+					"status": status_map.get(step.status, step.status),
+				}
+				for step in job.generation_steps
+			]
 
 		return {
 			"progress": progress,
