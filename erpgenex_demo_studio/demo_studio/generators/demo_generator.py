@@ -281,15 +281,49 @@ class DemoGenerator:
 		template_config = self.get_template_config("employee_config", {"employee_count": 50})
 		employee_count = template_config.get("employee_count", 50)
 		seed = self.get_template_config("company_config", {}).get("sample_data_seed", {})
+		departments = template_config.get("department_names") or [
+			"Sales",
+			"Operations",
+			"Finance",
+			"Procurement",
+			"Support",
+			"Administration",
+		]
 		employee_count = self._preview_count(
 			seed.get("employees", seed.get("consultants", seed.get("teachers", seed.get("care_teams", employee_count)))),
 			25,
 		)
-		
-		# This is a placeholder - actual implementation would create realistic employee data
-		self.demo_environment.employees = employee_count
+
+		if not self._is_doctype_available("Employee"):
+			self.demo_environment.employees = employee_count
+			self.demo_environment.save()
+			return
+
+		prefix = self.get_employee_prefix()
+		created_employees = []
+		for index in range(1, employee_count + 1):
+			payload = self.build_employee_payload(index=index, prefix=prefix, departments=departments)
+			if not payload:
+				continue
+
+			employee_code = payload.get("employee_code")
+			if employee_code and frappe.db.exists("Employee", {"employee_code": employee_code}):
+				created_employees.append(employee_code)
+				continue
+
+			try:
+				doc = frappe.get_doc({"doctype": "Employee", **payload})
+				doc.insert(ignore_permissions=True)
+				created_employees.append(doc.name)
+			except Exception as exc:
+				frappe.log_error(
+					f"Failed to create Employee {employee_code or index}: {exc}",
+					"Demo seed failed for Employee",
+				)
+
+		self.employee_records = created_employees
+		self.demo_environment.employees = len(created_employees) or employee_count
 		self.demo_environment.save()
-	
 	def generate_customers(self):
 		"""Generate customers"""
 		template_config = self.get_template_config("customer_config", {"customer_count": 100})
@@ -386,9 +420,42 @@ class DemoGenerator:
 	
 	def generate_accounting_entries(self):
 		"""Generate accounting entries"""
-		# Placeholder for accounting entry generation
-		pass
-	
+		company = self.demo_environment.company
+		if not company:
+			return
+
+		template_company = self.get_template_config("company_config", {})
+		activity = (
+			template_company.get("business_activity")
+			or template_company.get("industry_sector")
+			or self.demo_environment.industry
+			or "General"
+		).strip() or "General"
+		summary = {"activity": activity, "coa_generated": False, "company_defaults": None}
+
+		if self._is_doctype_available("GL Account"):
+			try:
+				from omnexa_accounting.utils.production_readiness import generate_professional_chart_of_accounts
+
+				summary["coa_generated"] = generate_professional_chart_of_accounts(
+					company,
+					branch=None,
+					activity=activity,
+				)
+			except Exception as exc:
+				summary["coa_error"] = str(exc)
+
+		try:
+			from omnexa_accounting.utils.company_financial_defaults import apply_company_default_gl_from_coa
+
+			summary["company_defaults"] = apply_company_default_gl_from_coa(company, branch=None, overwrite=0)
+		except Exception as exc:
+			summary["defaults_error"] = str(exc)
+
+		context = self._generation_context()
+		context["accounting_summary"] = summary
+		self.demo_environment.generation_log = json.dumps(context, indent=2)
+		self.demo_environment.save()
 	def validate_environment(self):
 		"""Validate generated environment"""
 		validation_log = {
@@ -411,6 +478,43 @@ class DemoGenerator:
 		self.safe_set_field(company, "business_activity", template_company.get("business_activity"))
 		self.safe_set_field(company, "industry_sector", template_company.get("industry_sector"))
 
+	def build_employee_payload(self, index, prefix, departments):
+		"""Build a realistic employee payload for the current template."""
+		if not departments:
+			departments = ["Operations"]
+
+		meta = frappe.get_meta("Employee")
+		code = f"{prefix[:4].upper()}-EMP-{index:04d}"
+		department = departments[(index - 1) % len(departments)]
+		designations = [
+			"Associate",
+			"Specialist",
+			"Coordinator",
+			"Supervisor",
+			"Manager",
+			"Lead",
+		]
+		designation = designations[(index - 1) % len(designations)]
+		payload = {
+			"employee_code": code,
+			"employee_name": f"{prefix} Team Member {index:03d}",
+			"company": self.demo_environment.company,
+			"status": "Active",
+			"date_of_joining": frappe.utils.add_months(frappe.utils.today(), -((index % 12) + 1)),
+			"department": department if meta.has_field("department") else None,
+			"designation": designation if meta.has_field("designation") else None,
+			"competency_level": "Foundation",
+			"license_status": "Not Required",
+			"external_reference": f"{self.generation_id}-{index:04d}",
+		}
+		if meta.has_field("manager") and index > 1 and getattr(self, "employee_records", None):
+			payload["manager"] = self.employee_records[(index - 2) % len(self.employee_records)]
+		return {k: v for k, v in payload.items() if v is not None}
+
+	def get_employee_prefix(self):
+		"""Derive an employee prefix from the template."""
+		company_config = self.get_template_config("company_config", {})
+		return company_config.get("business_activity") or self.demo_environment.demo_name
 	def safe_set_field(self, doc, fieldname, value):
 		"""Set a field only when the target field exists and accepts the value safely."""
 		if not value or not hasattr(doc, fieldname):
@@ -486,7 +590,7 @@ class DemoGenerator:
 		if not frappe.db.exists("DocType", "Contact") or not frappe.db.exists("DocType", "Address"):
 			return
 
-		for name in parent_names[: min(10, len(parent_names))]:
+		for name in parent_names[: min(20, len(parent_names))]:
 			self.ensure_contact_for_parent(parent_doctype, name)
 			self.ensure_address_for_parent(parent_doctype, name)
 
@@ -584,7 +688,8 @@ class DemoGenerator:
 
 	def get_supplier_prefix(self):
 		"""Derive a supplier prefix from the template."""
-		return self.get_template_config("company_config", {}).get("industry") or self.demo_environment.demo_name
+		company_config = self.get_template_config("company_config", {})
+		return company_config.get("business_activity") or company_config.get("industry_sector") or self.demo_environment.demo_name
 
 	def get_item_prefix(self):
 		"""Derive an item prefix from the template."""
@@ -658,46 +763,48 @@ class DemoGenerator:
 		for index, month_data in enumerate(monthly_projection):
 			posting_date = monthly_dates[index]
 			batch_created = 0
-			if customer:
-				so_name = self.create_sales_order(customer, service_item, posting_date, index, month_data)
-				if so_name:
-					summary["sales_orders"] += 1
+			monthly_batches = max(1, min(6, int(round((month_data.get("target_transactions") or 1) / 60.0)) or 1))
+			for batch_index in range(monthly_batches):
+				chain_date = frappe.utils.add_days(posting_date, batch_index * 3)
+				if customer:
+					so_name = self.create_sales_order(customer, service_item, chain_date, index + batch_index, month_data)
+					if so_name:
+						summary["sales_orders"] += 1
+						batch_created += 1
+					si_name = self.create_sales_invoice(customer, service_item, chain_date, index + batch_index, month_data, so_name)
+					if si_name:
+						summary["sales_invoices"] += 1
+						batch_created += 1
+					dn_name = self.create_delivery_note(customer, stock_item, warehouse, chain_date, index + batch_index, month_data, so_name)
+					if dn_name:
+						summary["delivery_notes"] += 1
+						batch_created += 1
+				if supplier:
+					po_name = self.create_purchase_order(supplier, service_item, chain_date, index + batch_index, month_data)
+					if po_name:
+						summary["purchase_orders"] += 1
+						batch_created += 1
+					pi_name = self.create_purchase_invoice(supplier, service_item, chain_date, index + batch_index, month_data, po_name)
+					if pi_name:
+						summary["purchase_invoices"] += 1
+						batch_created += 1
+					pr_name = self.create_purchase_receipt(supplier, stock_item, warehouse, chain_date, index + batch_index, month_data, po_name)
+					if pr_name:
+						summary["purchase_receipts"] += 1
+						batch_created += 1
+				if stock_item and warehouse:
+					se_name = self.create_stock_entry(stock_item, warehouse, chain_date, index + batch_index, month_data)
+					if se_name:
+						summary["stock_entries"] += 1
+						batch_created += 1
+				je_name = self.create_monthly_journal_entry(chain_date, index + batch_index, month_data)
+				if je_name:
+					summary["journal_entries"] += 1
 					batch_created += 1
-				si_name = self.create_sales_invoice(customer, service_item, posting_date, index, month_data, so_name)
-				if si_name:
-					summary["sales_invoices"] += 1
-					batch_created += 1
-				dn_name = self.create_delivery_note(customer, stock_item, warehouse, posting_date, index, month_data, so_name)
-				if dn_name:
-					summary["delivery_notes"] += 1
-					batch_created += 1
-			if supplier:
-				po_name = self.create_purchase_order(supplier, service_item, posting_date, index, month_data)
-				if po_name:
-					summary["purchase_orders"] += 1
-					batch_created += 1
-				pi_name = self.create_purchase_invoice(supplier, service_item, posting_date, index, month_data, po_name)
-				if pi_name:
-					summary["purchase_invoices"] += 1
-					batch_created += 1
-				pr_name = self.create_purchase_receipt(supplier, stock_item, warehouse, posting_date, index, month_data, po_name)
-				if pr_name:
-					summary["purchase_receipts"] += 1
-					batch_created += 1
-			if stock_item and warehouse:
-				se_name = self.create_stock_entry(stock_item, warehouse, posting_date, index, month_data)
-				if se_name:
-					summary["stock_entries"] += 1
-					batch_created += 1
-			je_name = self.create_monthly_journal_entry(posting_date, index, month_data)
-			if je_name:
-				summary["journal_entries"] += 1
-				batch_created += 1
 
 			if batch_created:
 				summary["monthly_batches"] += 1
 				summary["total_created"] += batch_created
-
 		return summary
 
 	def ensure_service_item(self):
