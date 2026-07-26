@@ -5,4 +5,5 @@
 [post_model_sync]
 erpgenex_demo_studio.patches.v1_0.sync_demo_studio_workspace
 erpgenex_demo_studio.patches.v1_0.sync_annual_demo_templates
+erpgenex_demo_studio.patches.v1_0.add_specialized_demo_templates
 # Patches added in this section will be executed after doctypes are migrated
