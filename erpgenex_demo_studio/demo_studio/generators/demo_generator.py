@@ -31,6 +31,70 @@ class DemoGenerator:
 
 	def _is_doctype_available(self, doctype):
 		return bool(frappe.db.exists("DocType", doctype))
+
+	def _branch_demo_activity(self):
+		template_company = self.get_template_config("company_config", {})
+		activity = (
+			template_company.get("business_activity")
+			or template_company.get("industry_sector")
+			or self.demo_environment.industry
+			or "General"
+		)
+		activity = (activity or "General").strip()
+		allowed = {"General", "Healthcare", "Education", "Financial Services", "Construction"}
+		return activity if activity in allowed else "General"
+
+	def _primary_branch_doc(self):
+		branch_name = self.get_primary_branch()
+		if not branch_name:
+			return None
+		try:
+			return frappe.get_doc("Branch", branch_name)
+		except Exception:
+			return None
+
+	def _activity_seed_action(self, branch_doc):
+		"""Pick the richest branch demo action that can run on this site."""
+		activity = (branch_doc.get("branch_demo_activity") or self._branch_demo_activity() or "General").strip()
+		installed = set(frappe.get_installed_apps() or [])
+		if activity == "Healthcare":
+			if "omnexa_healthcare" in installed:
+				return "healthcare_hospital", {
+					"patients": int(branch_doc.get("branch_demo_healthcare_patients") or 20),
+					"force": int(branch_doc.get("branch_demo_healthcare_force") or 0),
+					"include_financial": int(branch_doc.get("branch_demo_healthcare_financial") or 1),
+					"mode": "hospital",
+				}
+			return "seed_with_tx", {}
+		if activity == "Education":
+			if "omnexa_education" in installed:
+				return "education", {
+					"institution_type": branch_doc.get("branch_demo_education_institution_type") or "All 5 Types",
+					"seed_roles": int(branch_doc.get("branch_demo_education_seed_roles") or 1),
+					"sync_laravel": int(branch_doc.get("branch_demo_education_sync_laravel") or 0),
+				}
+			return "seed_with_tx", {}
+		if activity == "Financial Services":
+			return "finance_group", {
+				"customers": int(branch_doc.get("branch_demo_finance_customers") or 50),
+				"sync_roles": int(branch_doc.get("branch_demo_finance_sync_roles") or 1),
+				"force": int(branch_doc.get("branch_demo_finance_force") or 0),
+			}
+		if activity == "Construction":
+			if "omnexa_construction" in installed:
+				return "construction_portfolio", {"force": 1}
+			return "seed_with_tx", {}
+		if activity == "Hotel Assets":
+			if "omnexa_fixed_assets" in installed:
+				return "hotel_assets", {}
+			return "seed_with_tx", {}
+		return "seed_with_tx", {}
+
+	def _update_generation_context(self, **updates):
+		context = self._generation_context()
+		context.update(updates)
+		self.demo_environment.generation_log = json.dumps(context, indent=2)
+		self.demo_environment.save()
 	
 	def generate_demo_environment(self):
 		"""Generate complete demo environment"""
@@ -122,8 +186,9 @@ class DemoGenerator:
 			{"name": f"Generate {party_label}", "type": party_step_type},
 			{"name": "Generate Suppliers", "type": "Supplier"},
 			{"name": "Generate Items", "type": "Item"},
-			{"name": "Generate Transactions", "type": "Transaction"},
 			{"name": "Generate Accounting Entries", "type": "Accounting"},
+			{"name": "Seed Activity Demo Data", "type": "ActivitySeed"},
+			{"name": "Generate Transactions", "type": "Transaction"},
 			{"name": "Validate Environment", "type": "Validation"},
 		]
 		return steps
@@ -152,10 +217,12 @@ class DemoGenerator:
 				self.generate_suppliers()
 			elif step["type"] == "Item":
 				self.generate_items()
-			elif step["type"] == "Transaction":
-				self.generate_transactions()
 			elif step["type"] == "Accounting":
 				self.generate_accounting_entries()
+			elif step["type"] == "ActivitySeed":
+				self.seed_activity_demo_data()
+			elif step["type"] == "Transaction":
+				self.generate_transactions()
 			elif step["type"] == "Validation":
 				self.validate_environment()
 			
@@ -214,6 +281,7 @@ class DemoGenerator:
 		created_branches = []
 		branch_meta = {field.fieldname for field in frappe.get_meta("Branch").fields}
 		company = self.demo_environment.company
+		branch_activity = self._branch_demo_activity()
 
 		for i in range(branch_count):
 			branch_name = branch_names[i] if i < len(branch_names) else f"{self.demo_environment.company_name} - Branch {i + 1}"
@@ -245,6 +313,23 @@ class DemoGenerator:
 				branch.status = "Active"
 			if "is_head_office" in branch_meta and i == 0:
 				branch.is_head_office = 1
+			if "branch_demo_activity" in branch_meta:
+				branch.branch_demo_activity = branch_activity
+			if branch_activity == "Healthcare":
+				if "branch_demo_healthcare_patients" in branch_meta and not branch.get("branch_demo_healthcare_patients"):
+					branch.branch_demo_healthcare_patients = 20
+				if "branch_demo_healthcare_financial" in branch_meta and branch.get("branch_demo_healthcare_financial") is None:
+					branch.branch_demo_healthcare_financial = 1
+			elif branch_activity == "Financial Services":
+				if "branch_demo_finance_customers" in branch_meta and not branch.get("branch_demo_finance_customers"):
+					branch.branch_demo_finance_customers = 50
+				if "branch_demo_finance_sync_roles" in branch_meta and branch.get("branch_demo_finance_sync_roles") is None:
+					branch.branch_demo_finance_sync_roles = 1
+			elif branch_activity == "Education":
+				if "branch_demo_education_institution_type" in branch_meta and not branch.get("branch_demo_education_institution_type"):
+					branch.branch_demo_education_institution_type = "All 5 Types"
+				if "branch_demo_education_seed_roles" in branch_meta and branch.get("branch_demo_education_seed_roles") is None:
+					branch.branch_demo_education_seed_roles = 1
 			branch.insert(ignore_permissions=True)
 			created_branches.append(branch.name)
 
@@ -400,21 +485,18 @@ class DemoGenerator:
 		financial_summary = self.generate_financial_documents(monthly_projection)
 		
 		self.demo_environment.transactions = financial_summary.get("total_created", 0)
-		self.demo_environment.generation_log = json.dumps(
-			{
-				"annual_cycle": True,
-				"months": months,
-				"transactions_per_month_base": per_month,
-				"planned_volume": total_transactions,
-				"actual_documents_created": financial_summary.get("total_created", 0),
-				"customer_party_label": self.get_customer_party_label(),
-				"monthly_projection": monthly_projection,
-				"report_profiles": report_profiles,
-				"kpi_focus": kpi_focus,
-				"sample_data_seed": sample_data_seed,
-				"financial_summary": financial_summary,
-			},
-			indent=2,
+		self._update_generation_context(
+			annual_cycle=True,
+			months=months,
+			transactions_per_month_base=per_month,
+			planned_volume=total_transactions,
+			actual_documents_created=financial_summary.get("total_created", 0),
+			customer_party_label=self.get_customer_party_label(),
+			monthly_projection=monthly_projection,
+			report_profiles=report_profiles,
+			kpi_focus=kpi_focus,
+			sample_data_seed=sample_data_seed,
+			financial_summary=financial_summary,
 		)
 		self.demo_environment.save()
 	
@@ -452,10 +534,40 @@ class DemoGenerator:
 		except Exception as exc:
 			summary["defaults_error"] = str(exc)
 
-		context = self._generation_context()
-		context["accounting_summary"] = summary
-		self.demo_environment.generation_log = json.dumps(context, indent=2)
-		self.demo_environment.save()
+		self._update_generation_context(accounting_summary=summary)
+
+	def seed_activity_demo_data(self):
+		"""Seed the richest branch-specific demo available on this site."""
+		branch_doc = self._primary_branch_doc()
+		if not branch_doc:
+			self._update_generation_context(
+				activity_demo={"ok": False, "skipped": True, "reason": "missing_branch"}
+			)
+			return
+
+		action_key, kwargs = self._activity_seed_action(branch_doc)
+		summary = {
+			"ok": True,
+			"branch": branch_doc.name,
+			"activity": branch_doc.get("branch_demo_activity") or self._branch_demo_activity(),
+			"action": action_key,
+			"kwargs": kwargs,
+		}
+
+		try:
+			from omnexa_core.omnexa_core.branch_demo_api import run_demo_action_for_branch
+
+			summary["result"] = run_demo_action_for_branch(branch_doc, action_key, **kwargs)
+		except Exception as exc:
+			summary["ok"] = False
+			summary["error"] = str(exc)
+			frappe.log_error(
+				frappe.get_traceback(),
+				f"Demo activity seed failed for {branch_doc.name} ({action_key})",
+			)
+
+		self._update_generation_context(activity_demo=summary)
+
 	def validate_environment(self):
 		"""Validate generated environment"""
 		validation_log = {
@@ -467,7 +579,15 @@ class DemoGenerator:
 			"suppliers": self.demo_environment.suppliers > 0,
 			"items": self.demo_environment.items > 0,
 			"transactions": self.demo_environment.transactions >= 0,
+			"chart_of_accounts": (
+				frappe.db.count("GL Account", {"company": self.demo_environment.company}) > 0
+				if self._is_doctype_available("GL Account") and self.demo_environment.company
+				else False
+			),
 		}
+		context = self._generation_context()
+		activity_demo = context.get("activity_demo") or {}
+		validation_log["activity_demo"] = bool(activity_demo.get("ok")) or bool(activity_demo.get("skipped"))
 		
 		self.demo_environment.validation_log = json.dumps(validation_log, indent=2)
 		self.demo_environment.save()
@@ -1207,6 +1327,43 @@ def generate_demo_environment(demo_name):
 	"""Background job entry point for demo generation"""
 	generator = DemoGenerator(demo_name)
 	generator.generate_demo_environment()
+
+def run_demo_smoke_test(
+	template="Healthcare - Annual Demo",
+	industry="Healthcare",
+	demo_name=None,
+	company_name=None,
+	source="demo_wizard",
+):
+	"""Create and fully generate a small demo environment for smoke testing."""
+	demo_name = demo_name or f"TEST-DEMO-{uuid.uuid4().hex[:8].upper()}"
+	company_name = company_name or f"{demo_name} Company"
+	demo = frappe.get_doc({
+		"doctype": "Demo Environment",
+		"demo_name": demo_name,
+		"template": template,
+		"industry": industry,
+		"company_name": company_name,
+		"is_demo": 1,
+		"status": "Generating",
+		"generation_log": json.dumps({"source": source}, indent=2),
+	})
+	demo.insert(ignore_permissions=True)
+	DemoGenerator(demo.name).generate_demo_environment()
+	demo.reload()
+	return {
+		"name": demo.name,
+		"status": demo.status,
+		"company": demo.company,
+		"branches": demo.branches,
+		"employees": demo.employees,
+		"customers": demo.customers,
+		"suppliers": demo.suppliers,
+		"items": demo.items,
+		"transactions": demo.transactions,
+		"validation_log": demo.validation_log,
+		"generation_log": demo.generation_log,
+	}
 
 def reset_demo_environment(demo_name):
 	"""Reset a demo environment to initial state"""
