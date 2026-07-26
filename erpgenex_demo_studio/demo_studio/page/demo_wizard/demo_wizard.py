@@ -3,9 +3,11 @@ from __future__ import annotations
 import json
 import os
 from html import escape
+from pathlib import Path
 
 import frappe
 from frappe import _
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from erpgenex_demo_studio.demo_studio.setup.demo_templates import ensure_annual_demo_templates
 from erpgenex_demo_studio.demo_studio.utils.party_labels import classify_party_context, resolve_customer_party_label
@@ -237,15 +239,13 @@ def get_context(context):
 @frappe.whitelist()
 def get_rendered_page_html():
 	"""Return the rendered wizard HTML for Desk mounting."""
-	template_path = frappe.get_app_path(
-		"erpgenex_demo_studio",
-		"demo_studio",
-		"templates",
-		"demo_wizard_desk.html",
+	templates_dir = Path(frappe.get_app_path("erpgenex_demo_studio", "demo_studio", "templates"))
+	env = Environment(
+		loader=FileSystemLoader(str(templates_dir)),
+		autoescape=select_autoescape(["html", "xml"]),
 	)
-	with open(template_path, encoding="utf-8") as handle:
-		template = handle.read()
-	return frappe.render_template(template, {"wizard_payload": _build_wizard_payload()})
+	template = env.get_template("demo_wizard_desk.html")
+	return template.render(wizard_payload=_build_wizard_payload())
 
 
 @frappe.whitelist()
