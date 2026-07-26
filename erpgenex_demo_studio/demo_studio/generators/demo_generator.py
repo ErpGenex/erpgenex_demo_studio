@@ -61,7 +61,7 @@ class DemoGenerator:
 			if "omnexa_healthcare" in installed:
 				return "healthcare_hospital", {
 					"patients": int(branch_doc.get("branch_demo_healthcare_patients") or 20),
-					"force": int(branch_doc.get("branch_demo_healthcare_force") or 0),
+					"force": 1,
 					"include_financial": int(branch_doc.get("branch_demo_healthcare_financial") or 1),
 					"mode": "hospital",
 				}
@@ -78,7 +78,7 @@ class DemoGenerator:
 			return "finance_group", {
 				"customers": int(branch_doc.get("branch_demo_finance_customers") or 50),
 				"sync_roles": int(branch_doc.get("branch_demo_finance_sync_roles") or 1),
-				"force": int(branch_doc.get("branch_demo_finance_force") or 0),
+				"force": 1,
 			}
 		if activity == "Construction":
 			if "omnexa_construction" in installed:
@@ -748,30 +748,51 @@ class DemoGenerator:
 	def build_customer_payload(self, index, prefix):
 		"""Build a customer payload for a specific index."""
 		party_label = self.get_customer_party_label()
-		return {
+		payload = {
+			"customer_code": f"CUST-{self.generation_id[-6:]}-{index:04d}",
 			"customer_name": f"{prefix} {party_label} {index:03d}",
 			"customer_group": self.get_default_customer_group(),
 			"territory": self.get_default_territory(),
 			"unique_name": f"{prefix} {party_label} {index:03d}",
+			"company": self.demo_environment.company,
+			"status": "Active",
 		}
+		meta = frappe.get_meta("Customer")
+		if meta.has_field("branch"):
+			payload["branch"] = self.get_primary_branch()
+		return payload
 
 	def build_supplier_payload(self, index, prefix):
 		"""Build a supplier payload for a specific index."""
-		return {
+		payload = {
+			"supplier_code": f"SUP-{self.generation_id[-6:]}-{index:04d}",
 			"supplier_name": f"{prefix} Supplier {index:03d}",
 			"supplier_group": self.get_default_supplier_group(),
 			"unique_name": f"{prefix} Supplier {index:03d}",
+			"company": self.demo_environment.company,
+			"status": "Active",
 		}
+		meta = frappe.get_meta("Supplier")
+		if meta.has_field("branch"):
+			payload["branch"] = self.get_primary_branch()
+		return payload
 
 	def build_item_payload(self, index, prefix):
 		"""Build an item payload for a specific index."""
 		item_code = f"{prefix[:3].upper()}-ITEM-{index:04d}"
+		product_types = ["Traditional Product", "Service", "Raw Material", "Consumable", "Kit"]
+		product_type = product_types[(index - 1) % len(product_types)]
+		is_service = product_type == "Service"
 		return {
 			"item_code": item_code,
 			"item_name": f"{prefix} Item {index:04d}",
 			"item_group": self.get_default_item_group(),
 			"stock_uom": self.get_default_uom(),
-			"is_stock_item": 1,
+			"product_type": product_type,
+			"is_sales_item": 0 if is_service else 1,
+			"is_purchase_item": 0 if is_service else 1,
+			"is_stock_item": 0 if is_service else 1,
+			"company": self.demo_environment.company,
 			"unique_name": item_code,
 		}
 
