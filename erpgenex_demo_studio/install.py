@@ -16,10 +16,18 @@ def before_install():
 
 def after_install():
 	"""After installation hook - create initial setup"""
-	create_demo_studio_module()
-	create_demo_studio_role()
-	create_demo_studio_workspace()
-	ensure_annual_demo_templates()
+	# Keep the demo app non-blocking during provisioning; the site must stay live
+	# even if a demo workspace/template sync needs to be retried later.
+	for step in (
+		create_demo_studio_module,
+		create_demo_studio_role,
+		create_demo_studio_workspace,
+		ensure_annual_demo_templates,
+	):
+		try:
+			step()
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "ERPGenex Demo Studio Install")
 
 
 def create_demo_studio_module():
