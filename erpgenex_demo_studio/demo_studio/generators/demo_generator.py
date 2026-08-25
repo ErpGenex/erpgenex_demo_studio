@@ -32,6 +32,20 @@ class DemoGenerator:
 	def _is_doctype_available(self, doctype):
 		return bool(frappe.db.exists("DocType", doctype))
 
+	def _resolve_company_business_activity(self):
+		template_company = self.get_template_config("company_config", {})
+		activity = (
+			template_company.get("business_activity")
+			or template_company.get("industry_sector")
+			or self.demo_environment.industry
+		)
+		if not activity:
+			return None
+		activity = activity.strip()
+		if activity == "Hotel Assets" or "Hotel Assets" in activity or activity in ("Hospitality", "Tourism"):
+			return "Hotel Assets (إدارة أصول الفنادق)"
+		return activity
+
 	def _branch_demo_activity(self):
 		template_company = self.get_template_config("company_config", {})
 		activity = (
@@ -41,17 +55,135 @@ class DemoGenerator:
 			or "General"
 		)
 		activity = (activity or "General").strip()
-		allowed = {"General", "Healthcare", "Education", "Financial Services", "Construction"}
+		if activity == "Hotel Assets" or "Hotel Assets" in activity or activity in ("Hospitality", "Tourism"):
+			return "Hotel Assets"
+		allowed = {"General", "Healthcare", "Education", "Financial Services", "Construction", "Hotel Assets"}
 		return activity if activity in allowed else "General"
+
+	def _hotel_assets_seed_count(self, branch_doc=None):
+		seed = self.get_template_config("company_config", {}).get("sample_data_seed", {})
+		if branch_doc and branch_doc.get("branch_demo_hotel_assets_count"):
+			return int(branch_doc.get("branch_demo_hotel_assets_count"))
+		return int(seed.get("assets") or 200)
+
+	def _hotel_guest_room_layout(self) -> dict:
+		"""Map template hotel_rooms target to floor × rooms-per-floor layout."""
+		seed = self.get_template_config("company_config", {}).get("sample_data_seed", {})
+		total_rooms = int(seed.get("hotel_rooms") or 120)
+		# Prefer 6 guest floors (typical mid-size hotel demo); adjust rooms per floor.
+		guest_floors = 6
+		guest_rooms_per_floor = max(1, (total_rooms + guest_floors - 1) // guest_floors)
+		return {"guest_floors": guest_floors, "guest_rooms_per_floor": guest_rooms_per_floor}
+
+	def _ensure_hotel_fixed_asset_prerequisites(self, company: str) -> dict:
+		"""Ensure leaf GL accounts and a Fixed Asset Category exist for hotel seeding."""
+		summary = {"ok": True, "created": []}
+		if not company or not self._is_doctype_available("Fixed Asset Category"):
+			summary["ok"] = False
+			summary["reason"] = "missing_doctype"
+			return summary
+
+		existing = frappe.db.sql(
+			"""
+			SELECT name FROM `tabFixed Asset Category`
+			WHERE company = %(company)s AND IFNULL(is_group, 0) = 0
+			  AND IFNULL(asset_gl_account, '') != ''
+			  AND IFNULL(accumulated_depreciation_gl_account, '') != ''
+			  AND IFNULL(depreciation_expense_gl_account, '') != ''
+			LIMIT 1
+			""",
+			{"company": company},
+		)
+		if existing:
+			summary["category"] = existing[0][0]
+			return summary
+
+		if not self._is_doctype_available("GL Account"):
+			summary["ok"] = False
+			summary["reason"] = "missing_gl_account_doctype"
+			return summary
+
+		gl_meta = frappe.get_meta("GL Account")
+		abbr = (frappe.db.get_value("Company", company, "abbr") or company[:4]).upper()
+
+		def _leaf_gl(label: str, account_type: str | None = None, account_class: str | None = None) -> str:
+			account_name = f"{abbr} - {label}"
+			found = frappe.db.get_value("GL Account", {"company": company, "account_name": account_name}, "name")
+			if found:
+				return found
+			acc = frappe.new_doc("GL Account")
+			acc.company = company
+			acc.account_name = account_name
+			acc.is_group = 0
+			if account_type and gl_meta.has_field("account_type"):
+				acc.account_type = account_type
+			if gl_meta.has_field("account_class"):
+				if account_class:
+					acc.account_class = account_class
+				elif "Expense" in label:
+					acc.account_class = "Expense"
+				elif account_type in ("Payable",):
+					acc.account_class = "Liability"
+				else:
+					acc.account_class = "Asset"
+			if gl_meta.has_field("root_type"):
+				acc.root_type = acc.get("account_class") or "Asset"
+			acc.insert(ignore_permissions=True)
+			summary["created"].append(acc.name)
+			return acc.name
+
+		asset_gl = _leaf_gl("Hotel Fixed Assets", account_class="Asset")
+		accum_gl = _leaf_gl("Hotel Accum Depreciation", account_class="Asset")
+		expense_gl = _leaf_gl("Hotel Depreciation Expense", account_class="Expense")
+		_leaf_gl("Hotel Acquisition Clearing", account_class="Asset")
+
+		category_code = f"{abbr}-HTL"
+		if frappe.db.exists("Fixed Asset Category", {"company": company, "category_code": category_code}):
+			summary["category"] = frappe.db.get_value(
+				"Fixed Asset Category", {"company": company, "category_code": category_code}, "name"
+			)
+			return summary
+
+		category = frappe.get_doc(
+			{
+				"doctype": "Fixed Asset Category",
+				"category_code": category_code,
+				"category_name": f"{company} Hotel FF&E",
+				"company": company,
+				"is_group": 0,
+				"asset_gl_account": asset_gl,
+				"accumulated_depreciation_gl_account": accum_gl,
+				"depreciation_expense_gl_account": expense_gl,
+			}
+		)
+		category.insert(ignore_permissions=True)
+		summary["category"] = category.name
+		summary["created"].append(category.name)
+		return summary
 
 	def _primary_branch_doc(self):
 		branch_name = self.get_primary_branch()
 		if not branch_name:
 			return None
 		try:
-			return frappe.get_doc("Branch", branch_name)
+			branch_doc = frappe.get_doc("Branch", branch_name)
 		except Exception:
 			return None
+
+		desired_activity = self._branch_demo_activity()
+		meta = frappe.get_meta("Branch")
+		updates = {}
+		if "branch_demo_activity" in {f.fieldname for f in meta.fields}:
+			if (branch_doc.get("branch_demo_activity") or "General") != desired_activity:
+				updates["branch_demo_activity"] = desired_activity
+		if desired_activity == "Hotel Assets" and "branch_demo_hotel_assets_count" in {f.fieldname for f in meta.fields}:
+			if not branch_doc.get("branch_demo_hotel_assets_count"):
+				updates["branch_demo_hotel_assets_count"] = self._hotel_assets_seed_count(branch_doc)
+		if updates:
+			for key, value in updates.items():
+				branch_doc.set(key, value)
+			branch_doc.save(ignore_permissions=True)
+		return branch_doc
 
 	def _activity_seed_action(self, branch_doc):
 		"""Pick the richest branch demo action that can run on this site."""
@@ -86,7 +218,12 @@ class DemoGenerator:
 			return "seed_with_tx", {}
 		if activity == "Hotel Assets":
 			if "omnexa_fixed_assets" in installed:
-				return "hotel_assets", {}
+				return "hotel_assets", {
+					"count": self._hotel_assets_seed_count(branch_doc),
+					"with_transfer": 1,
+					"with_rfid": 1,
+					**self._hotel_guest_room_layout(),
+				}
 			return "seed_with_tx", {}
 		return "seed_with_tx", {}
 
@@ -177,6 +314,8 @@ class DemoGenerator:
 			party_step_type = "Patient"
 		elif context == "education":
 			party_step_type = "Student"
+		elif context == "hotel":
+			party_step_type = "Guest"
 
 		steps = [
 			{"name": "Generate Company", "type": "Company"},
@@ -211,7 +350,7 @@ class DemoGenerator:
 				self.generate_departments()
 			elif step["type"] == "Employee":
 				self.generate_employees()
-			elif step["type"] in ("Customer", "Patient", "Student"):
+			elif step["type"] in ("Customer", "Patient", "Student", "Guest"):
 				self.generate_customers()
 			elif step["type"] == "Supplier":
 				self.generate_suppliers()
@@ -259,6 +398,9 @@ class DemoGenerator:
 		# Check if company already exists
 		if frappe.db.exists("Company", self.demo_environment.company_name):
 			self.demo_environment.company = self.demo_environment.company_name
+			company = frappe.get_doc("Company", self.demo_environment.company_name)
+			self.apply_template_company_profile(company)
+			company.save(ignore_permissions=True)
 			return
 		
 		company = frappe.new_doc("Company")
@@ -295,6 +437,13 @@ class DemoGenerator:
 					"name",
 				)
 				if existing_head_office:
+					branch = frappe.get_doc("Branch", existing_head_office)
+					if "branch_demo_activity" in branch_meta:
+						branch.branch_demo_activity = branch_activity
+					if branch_activity == "Hotel Assets" and "branch_demo_hotel_assets_count" in branch_meta:
+						if not branch.get("branch_demo_hotel_assets_count"):
+							branch.branch_demo_hotel_assets_count = self._hotel_assets_seed_count()
+					branch.save(ignore_permissions=True)
 					created_branches.append(existing_head_office)
 					continue
 
@@ -330,6 +479,9 @@ class DemoGenerator:
 					branch.branch_demo_education_institution_type = "All 5 Types"
 				if "branch_demo_education_seed_roles" in branch_meta and branch.get("branch_demo_education_seed_roles") is None:
 					branch.branch_demo_education_seed_roles = 1
+			elif branch_activity == "Hotel Assets":
+				if "branch_demo_hotel_assets_count" in branch_meta and not branch.get("branch_demo_hotel_assets_count"):
+					branch.branch_demo_hotel_assets_count = self._hotel_assets_seed_count()
 			branch.insert(ignore_permissions=True)
 			created_branches.append(branch.name)
 
@@ -554,10 +706,25 @@ class DemoGenerator:
 			"kwargs": kwargs,
 		}
 
+		if action_key == "hotel_assets":
+			summary["prerequisites"] = self._ensure_hotel_fixed_asset_prerequisites(self.demo_environment.company)
+
 		try:
 			from omnexa_core.omnexa_core.branch_demo_api import run_demo_action_for_branch
 
-			summary["result"] = run_demo_action_for_branch(branch_doc, action_key, **kwargs)
+			user = frappe.session.user
+			prev_view_all = frappe.defaults.get_user_default("omnexa_view_all_branches", user)
+			prev_view_branch = frappe.defaults.get_user_default("omnexa_view_branch", user)
+			frappe.defaults.set_user_default("omnexa_view_all_branches", 1, user)
+			frappe.defaults.set_user_default("omnexa_view_branch", "", user)
+			try:
+				summary["result"] = run_demo_action_for_branch(branch_doc, action_key, **kwargs)
+			finally:
+				frappe.defaults.set_user_default("omnexa_view_all_branches", prev_view_all or 0, user)
+				frappe.defaults.set_user_default("omnexa_view_branch", prev_view_branch or "", user)
+			result = summary.get("result") or {}
+			if action_key == "hotel_assets" and result.get("created_count") is not None:
+				summary["assets_created"] = int(result.get("created_count") or 0)
 		except Exception as exc:
 			summary["ok"] = False
 			summary["error"] = str(exc)
@@ -595,8 +762,9 @@ class DemoGenerator:
 	def apply_template_company_profile(self, company):
 		"""Apply safe company-level template values when the field options allow them."""
 		template_company = self.get_template_config("company_config", {})
-		self.safe_set_field(company, "business_activity", template_company.get("business_activity"))
-		self.safe_set_field(company, "industry_sector", template_company.get("industry_sector"))
+		business_activity = self._resolve_company_business_activity() or template_company.get("business_activity")
+		self.safe_set_field(company, "business_activity", business_activity)
+		self.safe_set_field(company, "industry_sector", template_company.get("industry_sector") or business_activity)
 
 	def build_employee_payload(self, index, prefix, departments):
 		"""Build a realistic employee payload for the current template."""

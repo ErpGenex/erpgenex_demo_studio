@@ -40,6 +40,30 @@ def _first_non_empty(*values, default=""):
 	return default
 
 
+def _resolve_unique_demo_name(base_name: str) -> str:
+	"""Return a demo_name that does not collide with an existing Demo Environment."""
+	base_name = (base_name or _("Live Demo")).strip()
+	if not frappe.db.exists("Demo Environment", base_name):
+		return base_name
+	for index in range(2, 100):
+		candidate = f"{base_name} ({index})"
+		if not frappe.db.exists("Demo Environment", candidate):
+			return candidate
+	return f"{base_name} {frappe.generate_hash(length=6)}"
+
+
+def _resolve_unique_company_name(base_name: str) -> str:
+	"""Return a company_name that does not collide with an existing Company."""
+	base_name = (base_name or _("Live Demo Company")).strip()
+	if not frappe.db.exists("Company", {"company_name": base_name}):
+		return base_name
+	for index in range(2, 100):
+		candidate = f"{base_name} ({index})"
+		if not frappe.db.exists("Company", {"company_name": candidate}):
+			return candidate
+	return f"{base_name} {frappe.generate_hash(length=6)}"
+
+
 def _template_company_config(template_doc, manifest: dict) -> dict:
 	company = manifest.get("company_config") if isinstance(manifest.get("company_config"), dict) else {}
 	if not company and template_doc.get("company_config"):
@@ -89,6 +113,7 @@ def _estimate_template_profile(template_doc, lang: str = "ar"):
 		"customers": _safe_int(_first_non_empty(customer.get("customer_count"), sample.get("customers"), sample.get("patients"), sample.get("students"), sample.get("rental_contracts"), default=0)),
 		"suppliers": _safe_int(_first_non_empty(supplier.get("supplier_count"), sample.get("suppliers"), default=0)),
 		"items": _safe_int(_first_non_empty(sample.get("items"), sample.get("products"), sample.get("vehicles"), sample.get("crops"), sample.get("projects"), default=0)),
+		"assets": _safe_int(_first_non_empty(sample.get("assets"), default=0)),
 		"transactions": _safe_int(
 			_first_non_empty(
 				transaction.get("annual_transactions"),
@@ -278,8 +303,12 @@ def start_demo_generation(demo_data):
 		if template.status != "Active" or not template.is_active:
 			frappe.throw(_("Selected template is not active."))
 
-		demo_name = (demo_info.get("demo_name") or template.template_name or _("Live Demo")).strip()
-		company_name = (demo_info.get("company_name") or demo_name or template.template_name or _("Live Demo Company")).strip()
+		demo_name = _resolve_unique_demo_name(
+			(demo_info.get("demo_name") or template.template_name or _("Live Demo")).strip()
+		)
+		company_name = _resolve_unique_company_name(
+			(demo_info.get("company_name") or demo_name or template.template_name or _("Live Demo Company")).strip()
+		)
 		language = (demo_info.get("language") or "ar").strip()
 
 		demo = frappe.new_doc("Demo Environment")

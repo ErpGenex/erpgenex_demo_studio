@@ -113,6 +113,18 @@ let wizard, templates, selectedTemplate, currentIndustry, pollTimer;
 		renderSummary();
 	}
 
+	function suggestDemoName(template) {
+		if (!template) return 'Live Demo';
+		const stamp = new Date().toISOString().slice(0, 16).replace('T', ' ');
+		return `${template.template_name} — ${stamp}`;
+	}
+
+	function suggestCompanyName(template) {
+		if (!template) return 'Live Demo Company';
+		const stamp = new Date().toISOString().slice(0, 10);
+		return `${template.template_name} Company — ${stamp}`;
+	}
+
 	function applyTemplate(templateName) {
 		selectedTemplate = templates.find(t => t.name === templateName) || null;
 		refreshTemplateSelection();
@@ -124,10 +136,10 @@ let wizard, templates, selectedTemplate, currentIndustry, pollTimer;
 				const currentDemoName = demoNameEl.value.trim();
 				const currentCompanyName = companyNameEl.value.trim();
 				if (!currentDemoName || currentDemoName === (wizard.defaults && wizard.defaults.demo_name)) {
-					demoNameEl.value = selectedTemplate.template_name;
+					demoNameEl.value = suggestDemoName(selectedTemplate);
 				}
 				if (!currentCompanyName || currentCompanyName === (wizard.defaults && wizard.defaults.company_name)) {
-					companyNameEl.value = `${selectedTemplate.template_name} Company`;
+					companyNameEl.value = suggestCompanyName(selectedTemplate);
 				}
 			}
 			setStatus(`تم اختيار قالب "${selectedTemplate.template_name}"`, 'success');
@@ -239,8 +251,8 @@ let wizard, templates, selectedTemplate, currentIndustry, pollTimer;
 
 		const payload = {
 			template: selectedTemplate.name,
-			demo_name: demoName || selectedTemplate.template_name,
-			company_name: companyName || `${selectedTemplate.template_name} Company`,
+			demo_name: demoName || suggestDemoName(selectedTemplate),
+			company_name: companyName || suggestCompanyName(selectedTemplate),
 			language,
 			launch_mode: launchMode
 		};

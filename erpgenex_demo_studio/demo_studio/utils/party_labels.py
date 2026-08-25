@@ -26,6 +26,18 @@ EDUCATION_TOKENS = frozenset(
 		"أكاديم",
 	}
 )
+HOTEL_TOKENS = frozenset(
+	{
+		"hotel",
+		"hospitality",
+		"tourism",
+		"hotel assets",
+		"فندق",
+		"ضيافة",
+		"سياحة",
+		"أصول الفنادق",
+	}
+)
 
 
 def _normalize(value) -> str:
@@ -41,8 +53,10 @@ def classify_party_context(
 	industry_sector: str = "",
 	industry: str = "",
 ) -> str:
-	"""Return healthcare, education, or general based on company activity."""
+	"""Return healthcare, education, hotel, or general based on company activity."""
 	blob = _activity_blob(business_activity, industry_sector, industry)
+	if any(token in blob for token in HOTEL_TOKENS):
+		return "hotel"
 	if any(token in blob for token in HEALTHCARE_TOKENS):
 		return "healthcare"
 	if any(token in blob for token in EDUCATION_TOKENS):
@@ -70,6 +84,11 @@ def resolve_customer_party_label(
 		if plural:
 			return "طلاب" if arabic else "Students"
 		return "طالب" if arabic else "Student"
+
+	if context == "hotel":
+		if plural:
+			return "ضيوف" if arabic else "Guests"
+		return "ضيف" if arabic else "Guest"
 
 	if plural:
 		return "عملاء" if arabic else "Customers"
