@@ -1,3 +1,4 @@
+// i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 // Demo Wizard - Simple initialization script
 let wizard, templates, selectedTemplate, currentIndustry, pollTimer;
 
@@ -59,6 +60,7 @@ let wizard, templates, selectedTemplate, currentIndustry, pollTimer;
 		if (!template) return lang === 'ar' ? 'عملاء' : 'Customers';
 		if (template.party_context === 'healthcare') return lang === 'ar' ? 'مرضى' : 'Patients';
 		if (template.party_context === 'education') return lang === 'ar' ? 'طلاب' : 'Students';
+		if (template.party_context === 'legal') return lang === 'ar' ? 'عملاء قانونيون' : 'Legal Clients';
 		return lang === 'ar' ? 'عملاء' : 'Customers';
 	}
 

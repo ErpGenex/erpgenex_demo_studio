@@ -57,7 +57,7 @@ class DemoGenerator:
 		activity = (activity or "General").strip()
 		if activity == "Hotel Assets" or "Hotel Assets" in activity or activity in ("Hospitality", "Tourism"):
 			return "Hotel Assets"
-		allowed = {"General", "Healthcare", "Education", "Financial Services", "Construction", "Hotel Assets"}
+		allowed = {"General", "Healthcare", "Education", "Financial Services", "Construction", "Hotel Assets", "Legal"}
 		return activity if activity in allowed else "General"
 
 	def _hotel_assets_seed_count(self, branch_doc=None):
@@ -223,6 +223,16 @@ class DemoGenerator:
 					"with_transfer": 1,
 					"with_rfid": 1,
 					**self._hotel_guest_room_layout(),
+				}
+			return "seed_with_tx", {}
+		if activity == "Legal":
+			if "erpgenex_legal" in installed:
+				seed = self.get_template_config("company_config", {}).get("sample_data_seed", {})
+				return "legal_firm", {
+					"clients": int(branch_doc.get("branch_demo_legal_clients") or seed.get("clients") or 30),
+					"matters": int(branch_doc.get("branch_demo_legal_matters") or seed.get("matters") or 15),
+					"lawyers": int(seed.get("lawyers") or 8),
+					"force": 1,
 				}
 			return "seed_with_tx", {}
 		return "seed_with_tx", {}
@@ -482,6 +492,12 @@ class DemoGenerator:
 			elif branch_activity == "Hotel Assets":
 				if "branch_demo_hotel_assets_count" in branch_meta and not branch.get("branch_demo_hotel_assets_count"):
 					branch.branch_demo_hotel_assets_count = self._hotel_assets_seed_count()
+			elif branch_activity == "Legal":
+				seed = self.get_template_config("company_config", {}).get("sample_data_seed", {})
+				if "branch_demo_legal_clients" in branch_meta and not branch.get("branch_demo_legal_clients"):
+					branch.branch_demo_legal_clients = int(seed.get("clients") or 30)
+				if "branch_demo_legal_matters" in branch_meta and not branch.get("branch_demo_legal_matters"):
+					branch.branch_demo_legal_matters = int(seed.get("matters") or 15)
 			branch.insert(ignore_permissions=True)
 			created_branches.append(branch.name)
 

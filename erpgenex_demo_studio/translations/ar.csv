@@ -1,0 +1,478 @@
+1. اختر القالب,1. اختر القالب
+2. البيانات الأساسية,2. البيانات الأساسية
+3. المراجعة والتشغيل,3. المراجعة والتشغيل
+Accounting,المحاسبة
+Accounts Payable,الذمم الدائنة
+Accounts Receivable,الذمم المدينة
+Action,إجراء
+Action Type,إجراء النوع
+Actions,إجراءات
+Active,نشط
+ActivitySeed,بند واجهة
+Administrator,المسؤول
+Agriculture,الزراعة
+AI & Intelligence,الذكاء الاصطناعي والتحليلات
+All,الكل
+All activities,كل الأنشطة
+All branches,كل الفروع
+ALM,إدارة الأصول والخصوم
+App Name,بند واجهة
+Archived,مؤرشف
+Asset Insurance,تأمين الأصول
+Assigned To,مُسند إلى
+Assigned To Me,المُسند إليّ
+Attachments,المرفقات
+Audit,التدقيق
+Audit Log,تدقيق السجل
+Balance Sheet,الميزانية العمومية
+Bank Unmatched Statement Lines,بنود كشف بنك غير مطابقة
+Billing & collections,الفوترة والتحصيل
+Bookings & registration,الحجوزات والتسجيل
+BOQ,جدول الكميات
+Branch,الفرع
+Branch Config,بند واجهة
+Branches,بند واجهة
+Budget & cost control,الميزانية وضبط التكلفة
+Business Rules,بند واجهة
+Buy,المشتريات
+CAM & recoveries,المصاريف المشتركة والاستردادات
+CAM Budget,ميزانية المصاريف المشتركة
+Campaign ROI,عائد الحملة
+Can only cancel pending or running jobs,بند واجهة
+Can only delete demo environments,بند واجهة
+Can only reset demo environments,بند واجهة
+Cancel,إلغاء
+Cancel Requested,بند واجهة
+Cancelled,ملغى
+Cannot delete non-demo record,بند واجهة
+Capabilities,بند واجهة
+Car Rental,تأجير السيارات
+Card Break,قسم
+Chart,مخطط
+Chart of Accounts,دليل الحسابات
+Class Name,بند واجهة
+Cleanup,بند واجهة
+Closed,مغلق
+Commission Accrual,استحقاق العمولات
+Commission Schedule,جدول العمولات
+Company,الشركة
+Company Config,بند واجهة
+Company Name,الشركة الاسم
+Completed,مكتمل
+Completed At,مكتمل At
+Compliance checks complete,اكتملت فحوصات الامتثال
+Compliance Exceptions,استثناءات الامتثال
+Compliance Exceptions (IFRS),استثناءات الامتثال (IFRS)
+Compliance Exceptions (Tax),استثناءات الامتثال (ضريبي)
+Compliance Exceptions Dashboard,لوحة استثناءات الامتثال
+Compliance Reports,تقارير الامتثال
+Config,بند واجهة
+Configuration,بند واجهة
+Construction,المقاولات
+Construction & Engineering,المقاولات والهندسة
+Consumer Finance,التمويل الاستهلاكي
+Core ERP,ERP الأساسي
+Cost Center,مركز التكلفة
+Country,الدولة
+Create,إنشاء
+Create or review your first **Demo Environment** record from this workspace.,أنشئ أو راجع أول سجل **بند واجهة** من مساحة العمل هذه.
+Create or review your first **Demo Template** record from this workspace.,أنشئ أو راجع أول سجل **بند واجهة** من مساحة العمل هذه.
+Created By,تاريخ الإنشاء By
+Created Time,بند واجهة
+Credit Engine,محرك الائتمان
+Credit Risk,مخاطر الائتمان
+Critical,حرج
+CRM,إدارة العملاء
+Cross-module operations,عمليات متكاملة
+Currency,العملة
+Current Step,بند واجهة
+Custom Documents,المستندات المخصصة
+Customer,العميل
+Customer Config,بند واجهة
+Customers,بند واجهة
+Dashboard,لوحة معلومات
+Dashboard Provider,لوحة معلومات مزود
+Data Generators,بند واجهة
+Data Provider,بند واجهة
+Delete,حذف
+Demo Audit Log,بند واجهة
+Demo Deployment Wizard,بند واجهة
+Demo Environment,بند واجهة
+Demo Environment Register,سجل بند واجهة
+Demo Generation Job,بند واجهة
+Demo Generation Job Register,سجل بند واجهة
+Demo ID,ID — بند واجهة
+Demo Name,بند واجهة
+Demo name already exists,بند واجهة
+Demo Provider,بند واجهة
+Demo Provider Register,سجل بند واجهة
+Demo Studio,استوديو العرض
+Demo Studio Activity Register,سجل بند واجهة
+Demo Studio Compliance Snapshot,بند واجهة
+Demo Studio Document Summary,ملخص بند واجهة
+Demo Studio Installation Check,بند واجهة
+Demo Studio Manager,بند واجهة
+Demo Studio Status Overview,بند واجهة
+Demo Template,بند واجهة
+Demo Template Register,سجل بند واجهة
+Demo Wizard Error,بند واجهة
+Department,بند واجهة
+Departments,أقسام وتخصصات
+Dependencies,بند واجهة
+Deprecated,بند واجهة
+Description,الوصف
+Design & quantities (BOQ),التصميم والكميات (جدول الكميات)
+Desk,المكتب
+Details,التفاصيل
+Development Budget,ميزانية التطوير
+Development Project,مشروع تطوير
+Development Project Register,سجل مشاريع التطوير
+Development project register,سجل مشاريع التطوير
+DocType,نوع المستند
+Document,مستند
+Documents & Integration,المستندات والتكامل
+Draft,مسودة
+Duration (seconds),بند واجهة
+E-Invoice,الفاتورة الإلكترونية
+Edit,تعديل
+Education,التعليم
+Employee,الموظف
+Employee Config,بند واجهة
+Employees,بند واجهة
+Enabled,مفعّل
+Engineering Consulting,الاستشارات الهندسية
+Erpgenex Property Mgmt,إدارة العقارات
+Erpgenex Realestate Dev,التطوير العقاري
+Erpgenex Realestate Sales,التسويق العقاري
+ERPGENEX — Core ERP,ERPGENEX — ERP الأساسي
+ERPGENEX — Dashboard,ERPGENEX — لوحة المعلومات
+Error,خطأ
+Error Handling,بند واجهة
+Error Message,خطأ رسالة
+Error Traceback,بند واجهة
+Escalation Rule,قاعدة تصعيد الإيجار
+Event,حدث
+Executive Dashboard,لوحة المدير التنفيذية
+Explore this workspace,استكشف مساحة العمل
+Export,تصدير
+Factoring,التخصيم
+Failed,فشل
+Field PWA,تطبيق الميدان
+Filters,المرشحات
+Finance Control Exceptions,استثناءات الضوابط المالية
+Finance Control Violations,مخالفات الضوابط المالية
+Finance Controls,الضوابط المالية
+Finance Engine,محرك التمويل
+Finance Group,المجموعة المالية
+Finance SoD Blocks,حظر فصل المهام (SoD)
+Finance Workcenter,مركز عمل المالية
+Fixed Assets,الأصول الثابتة
+Form,نموذج
+Further,المزيد
+General Ledger,دفتر الأستاذ العام
+Generate,بند واجهة
+Generating,بند واجهة
+Generation,بند واجهة
+Generation ID,ID — بند واجهة
+Generation Log,بند واجهة
+Generation Step,بند واجهة
+Generation Steps,بند واجهة
+Generator Name,بند واجهة
+Generator Type,بند واجهة
+Generator Version,بند واجهة
+Get started with Demo Environment,بند واجهة
+Get started with Demo Template,بند واجهة
+GL Account,حساب GL
+Global Defaults,الإعدادات العامة
+Governance,الحوكمة
+Governance Overview,نظرة عامة على الحوكمة
+Guest,زائر
+Handover & defects (snagging),التسليم والعيوب
+Handover Package,حزمة التسليم
+Health Status,بند واجهة
+Healthcare,الرعاية الصحية
+Healthy,سليم
+Help,مساعدة
+Home,الرئيسية
+HR,الموارد البشرية
+IFRS 16 Liability,التزام الإيجار IFRS 16
+Implementation details required for this provider type,بند واجهة
+Import,استيراد
+In Progress,قيد التنفيذ
+Inactive,غير نشط
+Industry,بند واجهة
+Industry Name,بند واجهة
+Industry Provider,بند واجهة
+Industry Register,سجل بند واجهة
+Industry Solutions,حلول القطاعات
+Insights,رؤى وتحليلات
+Inventory,بند واجهة
+Inventory & development context,المخزون وسياق التطوير
+Inventory KPI Dashboard,لوحة مؤشرات المخزون
+Inventory KPIs,مؤشرات المخزون
+Inventory Low Stock Items,أصناف منخفضة المخزون
+Inventory Reorder Needed,أصناف تحتاج إعادة طلب
+Inventory Stock Items,أصناف المخزون
+IP Address,IP العنوان
+Is Active,Is نشط
+Is Cancellable,بند واجهة
+Is Demo,بند واجهة
+Is Standard,بند واجهة
+Item,الصنف
+Items,بند واجهة
+Job ID,ID — بند واجهة
+Job Log,بند واجهة
+Job Name,بند واجهة
+Job name already exists,بند واجهة
+Job Type,بند واجهة
+Journal Entry,قيد يومية
+Jump to the **🚀 Demo Deployment Wizard** page.,انتقل إلى صفحة **بند واجهة**.
+KPI Provider,KPI مزود
+Land & project charter,الأرض وميثاق المشروع
+Land Parcel,قطعة أرض
+Language,اللغة
+Last Month,الشهر الماضي
+Last Updated,بند واجهة
+Last Week,الأسبوع الماضي
+Lead acquisition & qualification,اكتساب العملاء وتأهيلهم
+Leasing & occupancy (IFRS 16 / IPSAS rent),التأجير والإشغال (IFRS 16 / IPSAS)
+Leasing Finance,التمويل التأجيري
+Leasing Mandate,تفويض تأجير
+List,قائمة
+Live Demo,بند واجهة
+Live Demo Company,بند واجهة
+Login,تسجيل الدخول
+Logout,تسجيل الخروج
+Logs,بند واجهة
+Maintenance,صيانة
+Maintenance — service requests,الصيانة — طلبات الخدمة
+Management Agreement,اتفاقية إدارة
+Manager role for ERPGenex Demo Studio - can create and manage demo environments,ERPGenex — بند واجهة
+Manufacturing,التصنيع
+Menu,القائمة
+Metadata,بند واجهة
+Method Name,بند واجهة
+Module Name,اسم الوحدة
+Mortgage Finance,التمويل العقاري
+My work,عملي
+Name,الاسم
+New,جديد
+None,لا شيء
+Notifications,الإشعارات
+Number Card,بطاقة رقمية
+Occupancy,الإشغال
+Omnexa Accounting Settings,إعدادات محاسبة Omnexa
+Omnexa Marketplace Settings,إعدادات سوق Omnexa
+Omnexa Purchase Settings,إعدادات مشتريات Omnexa
+Omnexa Sales Settings,إعدادات مبيعات Omnexa
+Omnexa Settings,إعدادات Omnexa
+Omnexa Stock Settings,إعدادات مخزون Omnexa
+Open,مفتوح
+Open report Compliance Exceptions Dashboard,فتح تقرير لوحة استثناءات الامتثال
+Open 🚀 Demo Deployment Wizard,بند واجهة
+Operating Scenarios,سيناريوهات التشغيل
+Operational Risk,المخاطر التشغيلية
+Other,أخرى
+Overdue,متأخر
+Owner reporting & trust accounting,تقارير الملاك والحسابات الائتمانية
+Owner Statement,كشف حساب المالك
+Patient,المريض
+Payment Entry,سند قبض/صرف
+Payment Plan Item,بند خطة السداد
+Pending,قيد الانتظار
+Performed At,بند واجهة
+Performed By,بند واجهة
+Permit Milestone,معلم التصريح
+Platform & Administration,المنصة والإدارة
+Please choose a demo template first.,بند واجهة
+PMC Lease Liability Schedule,جدول التزام الإيجار IFRS 16
+PMC Leasing Mandate,تفويض تأجير
+PMC Management Agreement,اتفاقية إدارة
+PMC Management Fee Summary,ملخص رسوم الإدارة
+PMC Occupancy Summary,ملخص الإشغال
+PMC Owner Statement,كشف حساب المالك
+PMC Owner Statement Register,سجل كشوف الملاك
+PMC Property,عقار
+PMC Property Unit,وحدة عقارية
+PMC Rent Aging,أعمار الإيجارات
+PMC Rent Billing Register,سجل فوترة الإيجار
+PMC Rent Roll,سجل الإيجارات
+PMC Rental Contract Register,سجل عقود الإيجار
+Portfolio & asset registry,المحفظة وسجل الأصول
+Priority,الأولوية
+Profile,الملف الشخصي
+Profit and Loss,الأرباح والخسائر
+Progress,بند واجهة
+Project EV,القيمة المكتسبة للمشروع
+Projects & Services,المشاريع والخدمات
+Projects PM,إدارة المشاريع
+Property,عقار
+Property Management,إدارة العقارات
+Property Sales Booking Register,سجل حجوزات البيع
+Property Sales Lead,عميل مبيعات عقارية
+Provider,مزود
+Provider DocType,مزود نوع المستند
+Provider Industry,بند واجهة
+Provider must be active,مزود يجب be نشط
+Provider Name,مزود الاسم
+Provider name already exists,بند واجهة
+Provider Type,مزود النوع
+Provider Version,مزود إصدار
+Purchase Invoice,فاتورة شراء
+Purchase Register,سجل المشتريات
+Quality,الجودة
+RE BOQ,جدول كميات التطوير
+RE Development,التطوير العقاري
+RE Handover Package,حزمة التسليم
+RE Marketing,التسويق العقاري
+RE Permit Milestone,معلم التصريح
+RE Project EV,القيمة المكتسبة للمشروع
+RE Subcontract Commitment,التزام مقاول باطن
+RE Unit Inventory,مخزون وحدات التطوير
+RE unit inventory (sales),مخزون وحدات البيع
+RE Unit Inventory Overview,نظرة عامة على مخزون الوحدات
+Ready,بند واجهة
+Real Estate,العقارات
+Records Created,بند واجهة
+Records Failed,بند واجهة
+Records Processed,بند واجهة
+Records Remaining,بند واجهة
+Refresh,تحديث
+Reload,إعادة تحميل
+Rent Aging,أعمار الإيجارات
+Rent billing register,سجل فوترة الإيجار
+Rent Billing Run,تشغيل فوترة الإيجار
+Rent Roll,سجل الإيجارات
+Rental Contract,عقد إيجار
+Rental contract register,سجل عقود الإيجار
+Report,تقرير
+Report Provider,تقرير مزود
+Requirements,بند واجهة
+Reservation register,سجل الحجوزات
+Reservations & unit holds,الحجوزات وحجز الوحدات
+Reset,إعادة ضبط
+Restaurant,المطاعم
+"Return here for shortcuts, charts, and lists for **Audit & Compliance**.",ارجع هنا للاختصارات والمخططات والقوائم لـ **التدقيق والامتثال**.
+"Return here for shortcuts, charts, and lists for **Core ERP**.",ارجع هنا للاختصارات والمخططات والقوائم لـ **ERP الأساسي**.
+"Return here for shortcuts, charts, and lists for **Demo Studio**.",ارجع هنا للاختصارات والمخططات والقوائم لـ **استوديو العرض**.
+Rules,بند واجهة
+Running,بند واجهة
+Sales Booking,حجز بيع
+Sales booking register,سجل حجوزات البيع
+Sales Commission Accrual,استحقاق عمولات المبيعات
+Sales Commission Schedule,جدول عمولات المبيعات
+Sales Invoice,فاتورة مبيعات
+Sales Lead,عميل محتمل
+Sales Portal,بوابة المبيعات
+Sales Register,سجل المبيعات
+Save,حفظ
+Scenario Provider,بند واجهة
+Search or type a command,ابحث أو اكتب أمرًا
+Search or type a command ({0}),ابحث أو اكتب أمرًا ({0})
+Selected template is not active.,بند واجهة
+Sell,المبيعات
+Services,الخدمات
+Settings,الإعدادات
+Shortcut,اختصار
+Skipped,بند واجهة
+SME Microfinance,التمويل متناهي الصغر
+SME Retail Finance,تمويل المنشآت والتجزئة
+Started At,بند واجهة
+Started By,بند واجهة
+Statistics,بند واجهة
+Status,الحالة
+Step Name,بند واجهة
+Step Type,بند واجهة
+Stock,المخزون
+Student,طالب
+Subcontract,مقاول باطن
+Submit,إرسال
+Supplier,المورد
+Supplier Config,بند واجهة
+Suppliers,بند واجهة
+Supported DocTypes,بند واجهة
+Supported Industries,بند واجهة
+System Manager,مدير النظام
+Task List,قائمة المهام
+Template,قالب
+Template Data Generator,بند واجهة
+Template Manifest,بند واجهة
+Template must be active,قالب يجب be نشط
+Template Name,اسم القالب
+Template name already exists,بند واجهة
+Template preview,قالب معاينة
+Template Summary,ملخص قالب
+Template Version,قالب إصدار
+This job cannot be cancelled,بند واجهة
+This Month,هذا الشهر
+This Week,هذا الأسبوع
+Timezone,المنطقة الزمنية
+Today,اليوم
+ToDo,مهمة
+Total Steps,بند واجهة
+Tourism,السياحة
+Trading,التجارة
+Trading & Manufacturing,التجارة والتصنيع
+Transaction,بند واجهة
+Transaction Config,بند واجهة
+Transactions,بند واجهة
+Trial Balance,ميزان المراجعة
+Unit,وحدة
+Unit Inventory,مخزون الوحدات
+Unit inventory & sales readiness,مخزون الوحدات وجاهزية البيع
+Unit inventory overview,نظرة عامة على مخزون الوحدات
+Unit Reservation,حجز وحدة
+Unit Reservation Register,سجل حجز الوحدات
+Update,تحديث
+Validate,بند واجهة
+Validation,بند واجهة
+Validation Log,بند واجهة
+Validation Rules,بند واجهة
+Vehicle Finance,تمويل المركبات
+Version,إصدار
+Warehouse,المستودع
+Warning,تحذير
+Workflow Provider,بند واجهة
+Workflow State,حالة سير العمل
+Workspace,مساحة العمل
+Workspaces,مساحات العمل
+Yesterday,أمس
+You are ready to work in Core ERP.,أنت جاهز للعمل في ERP الأساسي.
+اختر ديمو جاهز حسب النشاط والحجم,اختر ديمو جاهز حسب النشاط والحجم
+اسم الديمو، اسم الشركة، واللغة,اسم الديمو، اسم الشركة، واللغة
+تم إنشاء الديمو بنجاح,تم إنشاء الديمو بنجاح
+تم التخطي,تم التخطي
+تم بدء إنشاء الديمو بنجاح,تم بدء إنشاء الديمو بنجاح
+جاري التحضير...,جاري التحضير...
+جاري التنفيذ,جاري التنفيذ
+جاري النشر...,جاري النشر...
+جاري تجهيز الشركة والبيانات...,جاري تجهيز الشركة والبيانات...
+حدث خطأ أثناء النشر,حدث خطأ أثناء النشر
+راجع الملخص ثم ابدأ النشر,راجع الملخص ثم ابدأ النشر
+فشل,فشل
+قيد الانتظار,قيد الانتظار
+مكتمل,مكتمل
+✅ Handover,✅ التسليم
+🎯 CRM,🎯 إدارة العملاء
+🏗️ Projects,🏗️ المشاريع
+🏢 Organization,🏢 التنظيم والإعداد
+🏢 Organization & Setup,🏢 التنظيم والإعداد
+🏢 Portfolio,🏢 المحفظة العقارية
+👥 HR & Users,👥 الموارد البشرية والمستخدمون
+💰 Billing · Finance · ERP,💰 الفوترة · المالية · ERP
+💰 Commissions,💰 العمولات
+💰 Finance & ERP,💰 المالية · ERP
+💰 Owner & CAM,💰 المالك والمصاريف المشتركة
+📈 Reports,📈 التقارير
+📊 Analytics,📊 التحليلات
+📊 Dashboards,📊 لوحات المعلومات
+📊 Dashboards & Portals,📊 لوحات المعلومات والبوابات
+📊 Dashboards & portals,📊 لوحات المعلومات والبوابات
+📋 Commercial,📋 التجاري
+📋 Leasing,📋 التأجير
+📋 Operations,📋 العمليات
+📐 BOQ & inventory,📐 جدول الكميات والمخزون
+📦 Inventory & Supply,📦 المخزون والتوريد
+🔗 Integration,🔗 التكامل
+🚚 Field operations,🚚 العمليات الميدانية
+🛡️ Compliance,🛡️ الامتثال

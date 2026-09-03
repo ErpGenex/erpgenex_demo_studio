@@ -1,3 +1,4 @@
+# i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 from __future__ import annotations
 
 HEALTHCARE_TOKENS = frozenset(
@@ -38,6 +39,17 @@ HOTEL_TOKENS = frozenset(
 		"أصول الفنادق",
 	}
 )
+LEGAL_TOKENS = frozenset(
+	{
+		"legal",
+		"law firm",
+		"law",
+		"litigation",
+		"قانون",
+		"محام",
+		"مكتب محام",
+	}
+)
 
 
 def _normalize(value) -> str:
@@ -57,6 +69,8 @@ def classify_party_context(
 	blob = _activity_blob(business_activity, industry_sector, industry)
 	if any(token in blob for token in HOTEL_TOKENS):
 		return "hotel"
+	if any(token in blob for token in LEGAL_TOKENS):
+		return "legal"
 	if any(token in blob for token in HEALTHCARE_TOKENS):
 		return "healthcare"
 	if any(token in blob for token in EDUCATION_TOKENS):
@@ -89,6 +103,11 @@ def resolve_customer_party_label(
 		if plural:
 			return "ضيوف" if arabic else "Guests"
 		return "ضيف" if arabic else "Guest"
+
+	if context == "legal":
+		if plural:
+			return "عملاء قانونيون" if arabic else "Legal Clients"
+		return "عميل قانوني" if arabic else "Legal Client"
 
 	if plural:
 		return "عملاء" if arabic else "Customers"
