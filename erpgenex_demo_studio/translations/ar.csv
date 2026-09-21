@@ -5,10 +5,10 @@ Accounting,المحاسبة
 Accounts Payable,الذمم الدائنة
 Accounts Receivable,الذمم المدينة
 Action,إجراء
-Action Type,إجراء النوع
+Action Type,نوع إجراء
 Actions,إجراءات
 Active,نشط
-ActivitySeed,بند واجهة
+ActivitySeed,النشاط بذرة
 Administrator,المسؤول
 Agriculture,الزراعة
 AI & Intelligence,الذكاء الاصطناعي والتحليلات
@@ -16,58 +16,60 @@ All,الكل
 All activities,كل الأنشطة
 All branches,كل الفروع
 ALM,إدارة الأصول والخصوم
-App Name,بند واجهة
+API,واجهة API
+App Name,اسم التطبيق
+APPROVED,معتمد
 Archived,مؤرشف
 Asset Insurance,تأمين الأصول
 Assigned To,مُسند إلى
 Assigned To Me,المُسند إليّ
 Attachments,المرفقات
 Audit,التدقيق
-Audit Log,تدقيق السجل
+Audit Log,سجل تدقيق
 Balance Sheet,الميزانية العمومية
 Bank Unmatched Statement Lines,بنود كشف بنك غير مطابقة
 Billing & collections,الفوترة والتحصيل
 Bookings & registration,الحجوزات والتسجيل
 BOQ,جدول الكميات
 Branch,الفرع
-Branch Config,بند واجهة
-Branches,بند واجهة
+Branch Config,إعداد الفرع
+Branches,فروع
 Budget & cost control,الميزانية وضبط التكلفة
-Business Rules,بند واجهة
+Business Rules,قواعد العمل
 Buy,المشتريات
 CAM & recoveries,المصاريف المشتركة والاستردادات
 CAM Budget,ميزانية المصاريف المشتركة
 Campaign ROI,عائد الحملة
-Can only cancel pending or running jobs,بند واجهة
-Can only delete demo environments,بند واجهة
-Can only reset demo environments,بند واجهة
+Can only cancel pending or running jobs,يمكن إلغاء المهام قيد الانتظار أو التشغيل فقط
+Can only delete demo environments,يمكن حذف البيئات التجريبية فقط
+Can only reset demo environments,يمكن إعادة ضبط البيئات التجريبية فقط
 Cancel,إلغاء
-Cancel Requested,بند واجهة
+Cancel Requested,طُلب الإلغاء
 Cancelled,ملغى
-Cannot delete non-demo record,بند واجهة
-Capabilities,بند واجهة
+Cannot delete non-demo record,لا يمكن حذف سجل غير تجريبي
+Capabilities,قدرات
 Car Rental,تأجير السيارات
 Card Break,قسم
 Chart,مخطط
 Chart of Accounts,دليل الحسابات
-Class Name,بند واجهة
-Cleanup,بند واجهة
+Class Name,اسم الفئة
+Cleanup,تنظيف
 Closed,مغلق
 Commission Accrual,استحقاق العمولات
 Commission Schedule,جدول العمولات
 Company,الشركة
-Company Config,بند واجهة
-Company Name,الشركة الاسم
+Company Config,إعداد الشركة
+Company Name,اسم الشركة
 Completed,مكتمل
-Completed At,مكتمل At
+Completed At,مكتمل في
 Compliance checks complete,اكتملت فحوصات الامتثال
 Compliance Exceptions,استثناءات الامتثال
 Compliance Exceptions (IFRS),استثناءات الامتثال (IFRS)
 Compliance Exceptions (Tax),استثناءات الامتثال (ضريبي)
 Compliance Exceptions Dashboard,لوحة استثناءات الامتثال
 Compliance Reports,تقارير الامتثال
-Config,بند واجهة
-Configuration,بند واجهة
+Config,إعداد
+Configuration,إعداد
 Construction,المقاولات
 Construction & Engineering,المقاولات والهندسة
 Consumer Finance,التمويل الاستهلاكي
@@ -75,51 +77,51 @@ Core ERP,ERP الأساسي
 Cost Center,مركز التكلفة
 Country,الدولة
 Create,إنشاء
-Create or review your first **Demo Environment** record from this workspace.,أنشئ أو راجع أول سجل **بند واجهة** من مساحة العمل هذه.
-Create or review your first **Demo Template** record from this workspace.,أنشئ أو راجع أول سجل **بند واجهة** من مساحة العمل هذه.
-Created By,تاريخ الإنشاء By
-Created Time,بند واجهة
+Create or review your first **Demo Environment** record from this workspace.,أنشئ أو راجع أول سجل **تجريبي البيئة** من مساحة العمل هذه.
+Create or review your first **Demo Template** record from this workspace.,أنشئ أو راجع أول سجل **تجريبي قالب** من مساحة العمل هذه.
+Created By,تاريخ الإنشاء بواسطة
+Created Time,تاريخ الإنشاء الوقت
 Credit Engine,محرك الائتمان
 Credit Risk,مخاطر الائتمان
 Critical,حرج
 CRM,إدارة العملاء
 Cross-module operations,عمليات متكاملة
 Currency,العملة
-Current Step,بند واجهة
+Current Step,Current Step
 Custom Documents,المستندات المخصصة
 Customer,العميل
-Customer Config,بند واجهة
-Customers,بند واجهة
+Customer Config,إعداد العميل
+Customers,عملاء
 Dashboard,لوحة معلومات
-Dashboard Provider,لوحة معلومات مزود
-Data Generators,بند واجهة
-Data Provider,بند واجهة
+Dashboard Provider,لوحة المعلومات المزود
+Data Generators,Data Generators
+Data Provider,بيانات المزود
 Delete,حذف
-Demo Audit Log,بند واجهة
-Demo Deployment Wizard,بند واجهة
-Demo Environment,بند واجهة
-Demo Environment Register,سجل بند واجهة
-Demo Generation Job,بند واجهة
-Demo Generation Job Register,سجل بند واجهة
-Demo ID,ID — بند واجهة
-Demo Name,بند واجهة
-Demo name already exists,بند واجهة
-Demo Provider,بند واجهة
-Demo Provider Register,سجل بند واجهة
+Demo Audit Log,سجل تجريبي تدقيق
+Demo Deployment Wizard,تجريبي النشر معالج
+Demo Environment,تجريبي البيئة
+Demo Environment Register,سجل تجريبي البيئة
+Demo Generation Job,Demo Generation Job
+Demo Generation Job Register,Demo Generation Job Register
+Demo ID,تجريبي المعرّف
+Demo Name,اسم تجريبي
+Demo name already exists,تجريبي الاسم موجود بالفعل
+Demo Provider,تجريبي المزود
+Demo Provider Register,سجل تجريبي المزود
 Demo Studio,استوديو العرض
-Demo Studio Activity Register,سجل بند واجهة
-Demo Studio Compliance Snapshot,بند واجهة
-Demo Studio Document Summary,ملخص بند واجهة
-Demo Studio Installation Check,بند واجهة
-Demo Studio Manager,بند واجهة
-Demo Studio Status Overview,بند واجهة
-Demo Template,بند واجهة
-Demo Template Register,سجل بند واجهة
-Demo Wizard Error,بند واجهة
-Department,بند واجهة
+Demo Studio Activity Register,Demo Studio Activity Register
+Demo Studio Compliance Snapshot,Demo Studio Compliance Snapshot
+Demo Studio Document Summary,Demo Studio Document Summary
+Demo Studio Installation Check,Demo Studio Installation Check
+Demo Studio Manager,Demo Studio Manager
+Demo Studio Status Overview,Demo Studio Status Overview
+Demo Template,تجريبي قالب
+Demo Template Register,سجل تجريبي قالب
+Demo Wizard Error,تجريبي معالج خطأ
+Department,قسم
 Departments,أقسام وتخصصات
-Dependencies,بند واجهة
-Deprecated,بند واجهة
+Dependencies,Dependencies
+Deprecated,مهمل
 Description,الوصف
 Design & quantities (BOQ),التصميم والكميات (جدول الكميات)
 Desk,المكتب
@@ -128,17 +130,18 @@ Development Budget,ميزانية التطوير
 Development Project,مشروع تطوير
 Development Project Register,سجل مشاريع التطوير
 Development project register,سجل مشاريع التطوير
-DocType,نوع المستند
+DocType,Doc Type
 Document,مستند
 Documents & Integration,المستندات والتكامل
+DRAFT,مسودة
 Draft,مسودة
-Duration (seconds),بند واجهة
+Duration (seconds),Duration (seconds)
 E-Invoice,الفاتورة الإلكترونية
 Edit,تعديل
 Education,التعليم
 Employee,الموظف
-Employee Config,بند واجهة
-Employees,بند واجهة
+Employee Config,إعداد الموظف
+Employees,موظفون
 Enabled,مفعّل
 Engineering Consulting,الاستشارات الهندسية
 Erpgenex Property Mgmt,إدارة العقارات
@@ -147,9 +150,9 @@ Erpgenex Realestate Sales,التسويق العقاري
 ERPGENEX — Core ERP,ERPGENEX — ERP الأساسي
 ERPGENEX — Dashboard,ERPGENEX — لوحة المعلومات
 Error,خطأ
-Error Handling,بند واجهة
+Error Handling,Error Handling
 Error Message,خطأ رسالة
-Error Traceback,بند واجهة
+Error Traceback,Error Traceback
 Escalation Rule,قاعدة تصعيد الإيجار
 Event,حدث
 Executive Dashboard,لوحة المدير التنفيذية
@@ -159,6 +162,7 @@ Factoring,التخصيم
 Failed,فشل
 Field PWA,تطبيق الميدان
 Filters,المرشحات
+Filters Applied,الفلاتر المطبقة
 Finance Control Exceptions,استثناءات الضوابط المالية
 Finance Control Violations,مخالفات الضوابط المالية
 Finance Controls,الضوابط المالية
@@ -170,18 +174,20 @@ Fixed Assets,الأصول الثابتة
 Form,نموذج
 Further,المزيد
 General Ledger,دفتر الأستاذ العام
-Generate,بند واجهة
-Generating,بند واجهة
-Generation,بند واجهة
-Generation ID,ID — بند واجهة
-Generation Log,بند واجهة
-Generation Step,بند واجهة
-Generation Steps,بند واجهة
-Generator Name,بند واجهة
-Generator Type,بند واجهة
-Generator Version,بند واجهة
-Get started with Demo Environment,بند واجهة
-Get started with Demo Template,بند واجهة
+Generate,إنشاء
+Generated at,أُنشئ في
+Generated by,أُنشئ بواسطة
+Generating,Generating
+Generation,Generation
+Generation ID,Generation ID
+Generation Log,Generation Log
+Generation Step,Generation Step
+Generation Steps,Generation Steps
+Generator Name,Generator Name
+Generator Type,Generator Type
+Generator Version,Generator Version
+Get started with Demo Environment,ابدأ بـ تجريبي البيئة
+Get started with Demo Template,ابدأ بـ تجريبي قالب
 GL Account,حساب GL
 Global Defaults,الإعدادات العامة
 Governance,الحوكمة
@@ -189,24 +195,24 @@ Governance Overview,نظرة عامة على الحوكمة
 Guest,زائر
 Handover & defects (snagging),التسليم والعيوب
 Handover Package,حزمة التسليم
-Health Status,بند واجهة
+Health Status,حالة الصحة
 Healthcare,الرعاية الصحية
 Healthy,سليم
 Help,مساعدة
 Home,الرئيسية
 HR,الموارد البشرية
 IFRS 16 Liability,التزام الإيجار IFRS 16
-Implementation details required for this provider type,بند واجهة
+Implementation details required for this provider type,Implementation details required for this provider type
 Import,استيراد
 In Progress,قيد التنفيذ
 Inactive,غير نشط
-Industry,بند واجهة
-Industry Name,بند واجهة
-Industry Provider,بند واجهة
-Industry Register,سجل بند واجهة
+Industry,صناعة
+Industry Name,اسم صناعة
+Industry Provider,صناعة المزود
+Industry Register,سجل صناعة
 Industry Solutions,حلول القطاعات
 Insights,رؤى وتحليلات
-Inventory,بند واجهة
+Inventory,مخزون
 Inventory & development context,المخزون وسياق التطوير
 Inventory KPI Dashboard,لوحة مؤشرات المخزون
 Inventory KPIs,مؤشرات المخزون
@@ -214,44 +220,44 @@ Inventory Low Stock Items,أصناف منخفضة المخزون
 Inventory Reorder Needed,أصناف تحتاج إعادة طلب
 Inventory Stock Items,أصناف المخزون
 IP Address,IP العنوان
-Is Active,Is نشط
-Is Cancellable,بند واجهة
-Is Demo,بند واجهة
-Is Standard,بند واجهة
+Is Active,هو نشط
+Is Cancellable,Is Cancellable
+Is Demo,هو تجريبي
+Is Standard,هو معيار
 Item,الصنف
-Items,بند واجهة
-Job ID,ID — بند واجهة
-Job Log,بند واجهة
-Job Name,بند واجهة
-Job name already exists,بند واجهة
-Job Type,بند واجهة
+Items,أصناف
+Job ID,وظيفة المعرّف
+Job Log,سجل وظيفة
+Job Name,اسم وظيفة
+Job name already exists,وظيفة الاسم موجود بالفعل
+Job Type,نوع وظيفة
 Journal Entry,قيد يومية
-Jump to the **🚀 Demo Deployment Wizard** page.,انتقل إلى صفحة **بند واجهة**.
-KPI Provider,KPI مزود
+Jump to the **🚀 Demo Deployment Wizard** page.,انتقل إلى صفحة **🚀 تجريبي النشر معالج**.
+KPI Provider,KPI المزود
 Land & project charter,الأرض وميثاق المشروع
 Land Parcel,قطعة أرض
 Language,اللغة
 Last Month,الشهر الماضي
-Last Updated,بند واجهة
+Last Updated,آخر حُدّث
 Last Week,الأسبوع الماضي
 Lead acquisition & qualification,اكتساب العملاء وتأهيلهم
 Leasing & occupancy (IFRS 16 / IPSAS rent),التأجير والإشغال (IFRS 16 / IPSAS)
 Leasing Finance,التمويل التأجيري
 Leasing Mandate,تفويض تأجير
 List,قائمة
-Live Demo,بند واجهة
-Live Demo Company,بند واجهة
+Live Demo,مباشر تجريبي
+Live Demo Company,مباشر تجريبي الشركة
 Login,تسجيل الدخول
 Logout,تسجيل الخروج
-Logs,بند واجهة
+Logs,سجلات
 Maintenance,صيانة
 Maintenance — service requests,الصيانة — طلبات الخدمة
 Management Agreement,اتفاقية إدارة
-Manager role for ERPGenex Demo Studio - can create and manage demo environments,ERPGenex — بند واجهة
+Manager role for ERPGenex Demo Studio - can create and manage demo environments,Manager role for ERPGenex Demo Studio - can create and manage demo environments
 Manufacturing,التصنيع
 Menu,القائمة
-Metadata,بند واجهة
-Method Name,بند واجهة
+Metadata,بيانات وصفية
+Method Name,اسم طريقة
 Module Name,اسم الوحدة
 Mortgage Finance,التمويل العقاري
 My work,عملي
@@ -269,22 +275,25 @@ Omnexa Settings,إعدادات Omnexa
 Omnexa Stock Settings,إعدادات مخزون Omnexa
 Open,مفتوح
 Open report Compliance Exceptions Dashboard,فتح تقرير لوحة استثناءات الامتثال
-Open 🚀 Demo Deployment Wizard,بند واجهة
+Open 🚀 Demo Deployment Wizard,فتح 🚀 تجريبي النشر معالج
 Operating Scenarios,سيناريوهات التشغيل
 Operational Risk,المخاطر التشغيلية
 Other,أخرى
 Overdue,متأخر
 Owner reporting & trust accounting,تقارير الملاك والحسابات الائتمانية
 Owner Statement,كشف حساب المالك
+Page,صفحة
 Patient,المريض
 Payment Entry,سند قبض/صرف
 Payment Plan Item,بند خطة السداد
+PENDING,قيد الانتظار
 Pending,قيد الانتظار
-Performed At,بند واجهة
-Performed By,بند واجهة
+PENDING_APPROVAL,قيد الموافقة
+Performed At,Performed At
+Performed By,Performed By
 Permit Milestone,معلم التصريح
 Platform & Administration,المنصة والإدارة
-Please choose a demo template first.,بند واجهة
+Please choose a demo template first.,Please choose a demo template first.
 PMC Lease Liability Schedule,جدول التزام الإيجار IFRS 16
 PMC Leasing Mandate,تفويض تأجير
 PMC Management Agreement,اتفاقية إدارة
@@ -302,7 +311,7 @@ Portfolio & asset registry,المحفظة وسجل الأصول
 Priority,الأولوية
 Profile,الملف الشخصي
 Profit and Loss,الأرباح والخسائر
-Progress,بند واجهة
+Progress,Progress
 Project EV,القيمة المكتسبة للمشروع
 Projects & Services,المشاريع والخدمات
 Projects PM,إدارة المشاريع
@@ -310,14 +319,14 @@ Property,عقار
 Property Management,إدارة العقارات
 Property Sales Booking Register,سجل حجوزات البيع
 Property Sales Lead,عميل مبيعات عقارية
-Provider,مزود
-Provider DocType,مزود نوع المستند
-Provider Industry,بند واجهة
-Provider must be active,مزود يجب be نشط
-Provider Name,مزود الاسم
-Provider name already exists,بند واجهة
-Provider Type,مزود النوع
-Provider Version,مزود إصدار
+Provider,المزود
+Provider DocType,Provider Doc Type
+Provider Industry,المزود صناعة
+Provider must be active,المزود يجب يكون نشط
+Provider Name,اسم المزود
+Provider name already exists,المزود الاسم موجود بالفعل
+Provider Type,نوع المزود
+Provider Version,المزود إصدار
 Purchase Invoice,فاتورة شراء
 Purchase Register,سجل المشتريات
 Quality,الجودة
@@ -331,13 +340,14 @@ RE Subcontract Commitment,التزام مقاول باطن
 RE Unit Inventory,مخزون وحدات التطوير
 RE unit inventory (sales),مخزون وحدات البيع
 RE Unit Inventory Overview,نظرة عامة على مخزون الوحدات
-Ready,بند واجهة
+Ready,جاهز
 Real Estate,العقارات
-Records Created,بند واجهة
-Records Failed,بند واجهة
-Records Processed,بند واجهة
-Records Remaining,بند واجهة
+Records Created,سجلات تاريخ الإنشاء
+Records Failed,سجلات فشل
+Records Processed,سجلات مُعالج
+Records Remaining,سجلات متبقٍ
 Refresh,تحديث
+REJECTED,مرفوض
 Reload,إعادة تحميل
 Rent Aging,أعمار الإيجارات
 Rent billing register,سجل فوترة الإيجار
@@ -346,8 +356,8 @@ Rent Roll,سجل الإيجارات
 Rental Contract,عقد إيجار
 Rental contract register,سجل عقود الإيجار
 Report,تقرير
-Report Provider,تقرير مزود
-Requirements,بند واجهة
+Report Provider,تقرير المزود
+Requirements,متطلبات
 Reservation register,سجل الحجوزات
 Reservations & unit holds,الحجوزات وحجز الوحدات
 Reset,إعادة ضبط
@@ -355,8 +365,8 @@ Restaurant,المطاعم
 "Return here for shortcuts, charts, and lists for **Audit & Compliance**.",ارجع هنا للاختصارات والمخططات والقوائم لـ **التدقيق والامتثال**.
 "Return here for shortcuts, charts, and lists for **Core ERP**.",ارجع هنا للاختصارات والمخططات والقوائم لـ **ERP الأساسي**.
 "Return here for shortcuts, charts, and lists for **Demo Studio**.",ارجع هنا للاختصارات والمخططات والقوائم لـ **استوديو العرض**.
-Rules,بند واجهة
-Running,بند واجهة
+Rules,قواعد
+Running,قيد التشغيل
 Sales Booking,حجز بيع
 Sales booking register,سجل حجوزات البيع
 Sales Commission Accrual,استحقاق عمولات المبيعات
@@ -366,56 +376,58 @@ Sales Lead,عميل محتمل
 Sales Portal,بوابة المبيعات
 Sales Register,سجل المبيعات
 Save,حفظ
-Scenario Provider,بند واجهة
+Scenario Provider,سيناريو المزود
 Search or type a command,ابحث أو اكتب أمرًا
 Search or type a command ({0}),ابحث أو اكتب أمرًا ({0})
-Selected template is not active.,بند واجهة
+Selected template is not active.,محدد قالب هو لا نشط.
 Sell,المبيعات
 Services,الخدمات
 Settings,الإعدادات
 Shortcut,اختصار
-Skipped,بند واجهة
+Skipped,Skipped
 SME Microfinance,التمويل متناهي الصغر
 SME Retail Finance,تمويل المنشآت والتجزئة
-Started At,بند واجهة
-Started By,بند واجهة
-Statistics,بند واجهة
+Started At,بدأ في
+Started By,بدأ بواسطة
+Statistics,Statistics
 Status,الحالة
-Step Name,بند واجهة
-Step Type,بند واجهة
+Step Name,اسم خطوة
+Step Type,نوع خطوة
 Stock,المخزون
 Student,طالب
 Subcontract,مقاول باطن
 Submit,إرسال
 Supplier,المورد
-Supplier Config,بند واجهة
-Suppliers,بند واجهة
-Supported DocTypes,بند واجهة
-Supported Industries,بند واجهة
+Supplier Config,إعداد المورد
+Suppliers,موردون
+Supported DocTypes,Supported Doc Types
+Supported Industries,Supported Industries
 System Manager,مدير النظام
 Task List,قائمة المهام
 Template,قالب
-Template Data Generator,بند واجهة
-Template Manifest,بند واجهة
-Template must be active,قالب يجب be نشط
+Template Data Generator,Template Data Generator
+Template Manifest,Template Manifest
+Template must be active,قالب يجب يكون نشط
 Template Name,اسم القالب
-Template name already exists,بند واجهة
+Template name already exists,قالب الاسم موجود بالفعل
 Template preview,قالب معاينة
 Template Summary,ملخص قالب
 Template Version,قالب إصدار
-This job cannot be cancelled,بند واجهة
+Tenant (Customer),المستأجر (العميل)
+This job cannot be cancelled,هذا وظيفة لا يمكن يكون أُلغي
 This Month,هذا الشهر
 This Week,هذا الأسبوع
 Timezone,المنطقة الزمنية
 Today,اليوم
 ToDo,مهمة
-Total Steps,بند واجهة
+Total,الإجمالي
+Total Steps,الإجمالي خطوات
 Tourism,السياحة
 Trading,التجارة
 Trading & Manufacturing,التجارة والتصنيع
-Transaction,بند واجهة
-Transaction Config,بند واجهة
-Transactions,بند واجهة
+Transaction,معاملة
+Transaction Config,إعداد معاملة
+Transactions,معاملات
 Trial Balance,ميزان المراجعة
 Unit,وحدة
 Unit Inventory,مخزون الوحدات
@@ -424,16 +436,18 @@ Unit inventory overview,نظرة عامة على مخزون الوحدات
 Unit Reservation,حجز وحدة
 Unit Reservation Register,سجل حجز الوحدات
 Update,تحديث
-Validate,بند واجهة
-Validation,بند واجهة
-Validation Log,بند واجهة
-Validation Rules,بند واجهة
+Validate,تحقق
+Validation,التحقق
+Validation Log,سجل التحقق
+Validation Rules,التحقق قواعد
 Vehicle Finance,تمويل المركبات
+Verify,تحقق
 Version,إصدار
 Warehouse,المستودع
 Warning,تحذير
-Workflow Provider,بند واجهة
+Workflow Provider,سير عمل المزود
 Workflow State,حالة سير العمل
+Working paper — not a statutory audit opinion,ورقة عمل — ليست رأي تدقيق قانوني
 Workspace,مساحة العمل
 Workspaces,مساحات العمل
 Yesterday,أمس
