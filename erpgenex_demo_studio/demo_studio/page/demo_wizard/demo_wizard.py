@@ -211,8 +211,55 @@ def _load_template_cards(lang: str = "ar"):
 	return cards
 
 
+def _site_activity_context() -> dict:
+	"""Align wizard defaults with the site's company business activity when possible."""
+	activity = "General"
+	industry_hint = ""
+	try:
+		from omnexa_core.omnexa_core.app_visibility import get_user_company_activity
+
+		activity = get_user_company_activity() or "General"
+	except Exception:
+		pass
+
+	# Map company activity → Demo Template industry labels (catalog uses industry field).
+	activity_to_industry = {
+		"Healthcare": "Healthcare",
+		"Education": "Education",
+		"Construction": "Construction",
+		"Engineering Consulting": "Engineering Consulting",
+		"Financial Services": "Financial Services",
+		"Trading": "Trading",
+		"Manufacturing": "Manufacturing",
+		"Agriculture": "Agriculture",
+		"Tourism": "Tourism",
+		"Hotel Assets": "Hotel Assets",
+		"Bakeries": "Restaurant",
+		"Services": "Services",
+		"Legal": "Legal",
+		"Statutory Audit": "Statutory Audit",
+	}
+	industry_hint = activity_to_industry.get(activity, "")
+	return {"company_activity": activity, "suggested_industry": industry_hint}
+
+
+def _pick_recommended_template(templates: list[dict], site_ctx: dict) -> dict | None:
+	if not templates:
+		return None
+	industry_hint = (site_ctx or {}).get("suggested_industry") or ""
+	if industry_hint:
+		for template in templates:
+			if template.get("industry") == industry_hint and template.get("is_standard"):
+				return template
+		for template in templates:
+			if template.get("industry") == industry_hint:
+				return template
+	return next((t for t in templates if t.get("is_standard")), templates[0])
+
+
 def _build_wizard_payload(lang: str = "ar"):
 	templates = _load_template_cards(lang)
+	site_ctx = _site_activity_context()
 	industries = []
 	for template in templates:
 		if template["industry"] and template["industry"] not in industries:
@@ -225,7 +272,7 @@ def _build_wizard_payload(lang: str = "ar"):
 		order_by="provider_name asc",
 	)
 
-	recommended = next((t for t in templates if t["is_standard"]), templates[0] if templates else None)
+	recommended = _pick_recommended_template(templates, site_ctx)
 	stats = {
 		"templates": len(templates),
 		"industries": len(industries),
@@ -239,6 +286,7 @@ def _build_wizard_payload(lang: str = "ar"):
 		"industries": industries,
 		"providers": providers,
 		"recommended_template": recommended,
+		"site_context": site_ctx,
 		"stats": stats,
 		"defaults": {
 			"demo_name": _("Live Demo"),
@@ -284,6 +332,50 @@ def get_template_details(template_name, lang: str = "ar"):
 	"""Return an enriched template snapshot for the selected template."""
 	template = frappe.get_doc("Demo Template", template_name)
 	return _build_template_card(template, lang or "ar")
+
+
+@frappe.whitelist()
+def quick_register_demo(template: str | None = None, language: str = "ar"):
+	"""One-shot demo registration: recommended or chosen template + auto unique names."""
+	site_ctx = _site_activity_context()
+	templates = _load_template_cards(language or "ar")
+	if not templates:
+		frappe.throw(_("No demo templates are available. Sync templates first."))
+
+	chosen = None
+	if template:
+		chosen = next((t for t in templates if t["name"] == template), None)
+		if not chosen:
+			frappe.throw(_("Unknown demo template."))
+	else:
+		chosen = _pick_recommended_template(templates, site_ctx)
+	if not chosen:
+		frappe.throw(_("No demo template could be selected."))
+
+	demo_name = _resolve_unique_demo_name(suggest_demo_name(chosen["template_name"]))
+	company_name = _resolve_unique_company_name(suggest_company_name(chosen["template_name"]))
+	payload = {
+		"template": chosen["name"],
+		"demo_name": demo_name,
+		"company_name": company_name,
+		"language": (language or "ar").strip(),
+		"launch_mode": "guided",
+	}
+	return start_demo_generation(json.dumps(payload))
+
+
+def suggest_demo_name(template_title: str) -> str:
+	from frappe.utils import now_datetime
+
+	stamp = now_datetime().strftime("%Y-%m-%d %H:%M")
+	return f"{template_title} — {stamp}"
+
+
+def suggest_company_name(template_title: str) -> str:
+	from frappe.utils import today
+
+	stamp = today()
+	return f"{template_title} Company — {stamp}"
 
 
 @frappe.whitelist()

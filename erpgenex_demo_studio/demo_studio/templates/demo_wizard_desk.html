@@ -531,6 +531,70 @@
 		color: var(--muted);
 	}
 
+	.quick-start {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 12px;
+		margin: 0 22px 18px;
+		padding: 16px 18px;
+		border-radius: 22px;
+		background: linear-gradient(135deg, rgba(15, 118, 110, 0.08), rgba(37, 99, 235, 0.06));
+		border: 1px solid rgba(15, 118, 110, 0.18);
+	}
+
+	.quick-start p {
+		margin: 0;
+		flex: 1 1 220px;
+		font-size: 13px;
+		line-height: 1.75;
+		color: var(--muted);
+	}
+
+	.wizard-step {
+		display: none;
+	}
+
+	.wizard-step.is-active {
+		display: block;
+	}
+
+	.wizard-nav {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 10px;
+		padding: 0 22px 22px;
+		border-top: 1px solid var(--line);
+		margin-top: 8px;
+		padding-top: 18px;
+	}
+
+	.wizard-nav .button.ghost {
+		background: transparent;
+		border: 1px solid rgba(15, 23, 42, 0.12);
+	}
+
+	.advanced-toggle {
+		background: none;
+		border: 0;
+		color: var(--brand);
+		font: inherit;
+		font-weight: 800;
+		cursor: pointer;
+		padding: 0;
+		margin-top: 4px;
+	}
+
+	.advanced-panel {
+		display: none;
+	}
+
+	.advanced-panel.is-open {
+		display: grid;
+		gap: 12px;
+	}
+
 	@media (max-width: 1100px) {
 		.hero,
 		.layout,
@@ -593,7 +657,19 @@
 			{% endfor %}
 		</div>
 
-		<div class="content-grid">
+		<div class="quick-start" id="quickStartBar">
+			<p id="quickStartHint">
+				{% if payload.site_context and payload.site_context.suggested_industry %}
+				نشاط الشركة على الموقع: <b>{{ payload.site_context.company_activity }}</b> — اختر «ديمو سريع» لتسجيل بيئة جاهزة بالقالب المقترح دون خطوات إضافية.
+				{% else %}
+				<b>ديمو سريع:</b> تسجيل بيئة تجريبية بالقالب المقترح وأسماء تلقائية — بدون تعبئة نماذج أو سجلات يدوية.
+				{% endif %}
+			</p>
+			<button type="button" class="button launch" id="expressBtn" style="width:auto;min-width:11rem;">ديمو سريع — تسجيل الآن</button>
+		</div>
+
+		<div class="wizard-step is-active" data-wizard-step="1">
+		<div class="content-grid" style="grid-template-columns: 1fr;">
 			<div class="section">
 				<div class="panel-header" style="padding-bottom: 14px;">
 					<h3>1. اختر قالب الديمو</h3>
@@ -640,24 +716,27 @@
 				</div>
 				{% endif %}
 			</div>
+		</div>
+		</div>
 
+		<div class="wizard-step" data-wizard-step="2">
 			<div class="section">
 				<div class="panel-header" style="padding-bottom: 14px;">
 					<h3>2. أعدّ البيانات الأساسية</h3>
-					<p>يمكنك ترك القيم الافتراضية أو تخصيصها بسرعة.</p>
+					<p>اسم البيئة التجريبية واسم الشركة — نملأهما تلقائيًا من القالب ويمكنك تعديلهما.</p>
 				</div>
 
 				<div class="form-stack">
 					<div class="field">
-						<label for="demoName">اسم الديمو</label>
+						<label for="demoName">اسم الديمو (يُسجَّل في Demo Environment)</label>
 						<input id="demoName" class="text-input" type="text" value='{{ payload.defaults.demo_name if payload.defaults else "Live Demo" }}'>
-						<div class="help">هذا الاسم سيظهر داخل سجل البيئة ولوحة الإدارة.</div>
+						<div class="help">يظهر في سجل البيئة التجريبية ولوحة Demo Studio.</div>
 					</div>
 
 					<div class="field">
-						<label for="companyName">اسم الشركة</label>
+						<label for="companyName">اسم الشركة في ERP</label>
 						<input id="companyName" class="text-input" type="text" value='{{ payload.defaults.company_name if payload.defaults else "Live Demo Company" }}'>
-						<div class="help">إذا تركته كما هو فسنستخدم اسم الديمو كاسم للشركة أيضًا.</div>
+						<div class="help">يُنشأ تلقائيًا من القالب؛ يمكنك فصله عن اسم الديمو.</div>
 					</div>
 
 					<div class="field">
@@ -668,37 +747,48 @@
 						</select>
 					</div>
 
-					<div class="field">
-						<label for="launchMode">طريقة الإطلاق</label>
-						<select id="launchMode" class="select-input">
-							<option value="guided" selected>إطلاق موجه مع التتبع</option>
-							<option value="fast">إطلاق سريع</option>
-						</select>
+					<button type="button" class="advanced-toggle" id="advancedToggle" aria-expanded="false">خيارات متقدمة</button>
+					<div class="advanced-panel" id="advancedPanel">
+						<div class="field">
+							<label for="launchMode">طريقة الإطلاق</label>
+							<select id="launchMode" class="select-input">
+								<option value="guided" selected>إطلاق موجه مع التتبع</option>
+								<option value="fast">إطلاق سريع</option>
+							</select>
+						</div>
 					</div>
 				</div>
+			</div>
+		</div>
 
-				<div class="summary-card">
-					<div class="panel-header" style="padding: 0 0 12px;">
-						<h3>3. الملخص قبل التشغيل</h3>
-						<p>هذه القيم تتحدث مباشرة عند اختيار القالب أو تعديل الحقول.</p>
-					</div>
+		<div class="wizard-step" data-wizard-step="3">
+			<div class="summary-card">
+				<div class="panel-header" style="padding-bottom: 12px;">
+					<h3>3. المراجعة والتسجيل</h3>
+					<p>تأكد من الملخص ثم اضغط «تسجيل ونشر الديمو» — نُنشئ Demo Environment ونبدأ التوليد.</p>
+				</div>
 
-					<div class="summary-box" id="summaryBox">
-						<div class="summary-row"><span>القالب المختار</span><strong id="summaryTemplate">-</strong></div>
-						<div class="summary-row"><span>المجال</span><strong id="summaryIndustry">-</strong></div>
-						<div class="summary-row"><span>حجم الديمو</span><strong id="summaryScale">-</strong></div>
-						<div class="summary-row"><span>التقدير التقريبي</span><strong id="summaryRecords">-</strong></div>
-						<div class="summary-row"><span>اسم الشركة</span><strong id="summaryCompany">-</strong></div>
-						<div class="summary-row"><span>اللغة</span><strong id="summaryLanguage">-</strong></div>
-					</div>
+				<div class="summary-box" id="summaryBox">
+					<div class="summary-row"><span>القالب المختار</span><strong id="summaryTemplate">-</strong></div>
+					<div class="summary-row"><span>المجال</span><strong id="summaryIndustry">-</strong></div>
+					<div class="summary-row"><span>حجم الديمو</span><strong id="summaryScale">-</strong></div>
+					<div class="summary-row"><span>التقدير التقريبي</span><strong id="summaryRecords">-</strong></div>
+					<div class="summary-row"><span>اسم البيئة / الشركة</span><strong id="summaryCompany">-</strong></div>
+					<div class="summary-row"><span>اللغة</span><strong id="summaryLanguage">-</strong></div>
 				</div>
 
 				<div class="primary-cta">
-					<button type="button" class="button launch" id="launchBtn">بدء نشر الديمو</button>
+					<button type="button" class="button launch" id="launchBtn">تسجيل ونشر الديمو</button>
 					<button type="button" class="button secondary" id="resetBtn">إعادة الضبط</button>
-					<div id="statusAlert" class="alert info">اختر قالبًا ثم اضغط على زر التشغيل لبدء تجهيز الديمو.</div>
+					<div id="statusAlert" class="alert info">اختر قالبًا من الخطوة 1 أو استخدم «ديمو سريع».</div>
+					<div id="registerLinkWrap" class="help" style="margin-top:8px;display:none;"></div>
 				</div>
 			</div>
+		</div>
+
+		<div class="wizard-nav">
+			<button type="button" class="button secondary ghost" id="prevStepBtn" disabled>السابق</button>
+			<button type="button" class="button launch" id="nextStepBtn" style="width:auto;min-width:9rem;">التالي</button>
 		</div>
 
 		<div class="progress-panel" id="progressPanel">
